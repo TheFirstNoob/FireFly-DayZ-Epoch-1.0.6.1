@@ -45,7 +45,7 @@ enableRadio false;
 enableSentences false;
 
 // EPOCH CONFIG VARIABLES START //
-#include "\z\addons\dayz_code\configVariables.sqf" // Don't remove this line
+#include "configVariables.sqf" // Don't remove this line
 // See the above file for a full list including descriptions and default values
 // Uncomment the lines below to change the default loadout
 //DefaultMagazines = ["HandRoadFlare","ItemBandage","ItemPainkiller","8Rnd_9x18_Makarov","8Rnd_9x18_Makarov"];
