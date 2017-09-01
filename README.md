@@ -8,12 +8,12 @@ FireFly - Это российский сервер с упором на хард
 Автор сборки: [TheFirstNoob](http://s-platoon.ru/profile/923-thefirstnoob/)
 
 * Вопрос: Почему выкладываю?
-* Ответ: Не жалко! Да и тем более 90% скриптов и фиксов лежит в открытом доступе!
+* Ответ: Не жалко! Да и тем более 90% скриптов и фиксов лежит в открытом доступе!  
 
-* Отдельное спасибо!
-www.s-platoon.ru (Код + форум)
-www.epochmod.com (Серверные файлы + код + форум)
-www.wogames.info (Тестеры)
+Отдельное спасибо!  
+* www.s-platoon.ru (Код + форум)
+* www.epochmod.com (Серверные файлы + код + форум)
+* www.wogames.info (Тестеры)
 
 --------------------------
 Для корректной работы требуется:
@@ -54,6 +54,6 @@ P.S: Большая нагрузка на ЖД из-за логов.
 Тестеры:
 --------------------------
 * [Wild Fire Army] (Weekly Open Games):
-* [WFA] TheFirstNoob (www.s-platoon.ru/Arma/Epoch/WOG)
+* [WFA] TheFirstNoob (s-platoon/Arma/Epoch/WOG)
 * [WFA] Kennig (Arma/Epoch/WOG)
 * [WFA] Agentos (Arma/Epoch/WOG)
