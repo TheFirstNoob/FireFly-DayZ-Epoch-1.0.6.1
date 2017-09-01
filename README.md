@@ -53,7 +53,7 @@ P.S: Большая нагрузка на ЖД из-за логов.
 --------------------------
 Тестеры:
 --------------------------
-* [Wild Fire Army] (Weekly Open Games):
+[Wild Fire Army] (Weekly Open Games):  
 * [WFA] TheFirstNoob (s-platoon/Arma/Epoch/WOG)
 * [WFA] Kennig (Arma/Epoch/WOG)
 * [WFA] Agentos (Arma/Epoch/WOG)
