@@ -36,7 +36,7 @@ if (_characterID != "0") then
 	/*
 		Переведу и оставлю для Расширенной БД откладки, которую я сделаю позже.
 		Переменная: Server_AdvancedDBDebug = true;
-		
+
 		diag_log ("[БАЗА ДАННЫХ]: ЗАПИСЬ: "+ str(_key));
 	*/
 	_key call server_hiveWrite;
