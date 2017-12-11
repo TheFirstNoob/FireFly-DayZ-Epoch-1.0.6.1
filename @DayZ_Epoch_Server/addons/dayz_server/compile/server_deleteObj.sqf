@@ -13,7 +13,7 @@ if (isServer) then
 	if (parseNumber _id > 0) then
 	{
 		// Посылаем запрос
-		_key = format["CHILD:304: %1:",_id];
+		_key = format["CHILD:304:%1:",_id];
 		_key call server_hiveWrite;
 		
 		diag_log format["[СЕРВЕР] - [server_deleteObj.sqf]: УДАЛЕНИЕ: Игрок %1 удалил объект с ID: %2",_activatingPlayer,_id];

@@ -17,8 +17,7 @@ _playerObj 		= 	nil;
 {
 	if ((getPlayerUID _x) == _playerUID) exitWith
 	{
-		_playerObj 	= 	_x; 
-		_playerPos 	= 	getPosATL _playerObj;
+		_playerObj = _x; _playerPos = getPosATL _playerObj;
 	};
 } count playableUnits;
 
@@ -47,9 +46,10 @@ if (_playerPos distance respawn_west_original < 1500) exitWith
 */
 
 // Если playerObj существует, то выполним все Синхронизации
-_characterID 	= 	_playerObj getVariable ["characterID", "?"];
+
+_characterID 	= 	_playerObj getVariable["characterID", "?"];
 _inCombat 		= 	_playerObj getVariable ["inCombat",false];
-_Sepsis 		= 	_playerObj getVariable ["USEC_Sepsis",false];
+_Sepsis 		= 	_playerObj getVariable["USEC_Sepsis",false];
 
 // Если Логин не синхронизируется
 if (_playerUID in dayz_ghostPlayers) exitWith
@@ -70,10 +70,10 @@ if (_characterID != "?") then
 	// Проверяем был ли у Игрока Сепсис перед выходом и выдаем статус Заражён.
 	if (_Sepsis) then
 	{
-		_playerObj setVariable ["USEC_infected",true,true];
+		_playerObj setVariable["USEC_infected",true,true];
 	};
 	
-	// if player object is alive lets sync the player and remove the body and if ghosting is active add the player id to the array
+	// Если player object жив, тогда синхронизируем игрока, удаляем тело и если ПРИЗРАК активно, то добавляем ID игрока в Массив
 	if (alive _playerObj) then
 	{
 		// ГЛАВНЫЙ ПРИОРИТЕТ КОДА! Синхронизация ДОЛЖНА пройти прежде чем Игрок получит isNull
@@ -102,7 +102,8 @@ if (_characterID != "?") then
 				diag_log format["[СЕРВЕР] - [server_onPlayerDisconnect.sqf]: НАБЛЮДАТЕЛЬ: %1, Живые игроки: %2",dayz_ghostPlayers,dayz_activePlayers];
 			*/
 			
-			if (!(_playerUID in dayz_ghostPlayers)) then { 
+			if (!(_playerUID in dayz_ghostPlayers)) then
+			{ 
 				dayz_ghostPlayers set [count dayz_ghostPlayers, _playerUID];
 				dayz_activePlayers set [count dayz_activePlayers, [_playerUID,diag_ticktime]];
 				
@@ -118,9 +119,7 @@ if (_characterID != "?") then
 	else
 	{
 		// Успех в server_playerSync выше, если игрок жив
-		{
-			[_x,"gear"] call server_updateObject
-		} count (nearestObjects [_playerPos,DayZ_GearedObjects,10]);
+		{[_x,"gear"] call server_updateObject} count (nearestObjects [_playerPos,DayZ_GearedObjects,10]);
 	};
 	
 	[_playerUID,_characterID,3,_playerName,(_playerPos call fa_coor2str)] call dayz_recordLogin;
