@@ -5,5 +5,4 @@ _unit = _this select 0;
 #ifdef SERVER_DEBUG
 	diag_log ("[СЕРВЕР] - [zombie_findOwner.sqf]: ОЧИСТКА: Удалено неконтролируемых зомби: " + (typeOf _unit) + " из: " + str(_unit) );
 #endif
-
 deleteVehicle _unit;

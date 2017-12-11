@@ -1,15 +1,9 @@
-/*
-	Случайно создает "Supply_Crate_DZE" по карте.
-	Лутаемое! Ломаем и открываем Ломом (Crossbar).
-	Определяет Вооружение для техники в Land_ammo_supply_wreck CfgVehicles класс.
-*/
-
 private ["_position","_veh","_istoomany"];
-// Не требуется _roadList или _buildingList в секции Private для этой функции!
+// Не используйте _roadList или _buildingList в функции private
 
-_position 	= 	_roadList call BIS_fnc_selectRandom;
-_position 	= 	_position modelToWorld [0,0,0];
-_position 	= 	[_position,5,20,5,0,2000,0] call BIS_fnc_findSafePos;
+_position = _roadList call BIS_fnc_selectRandom;
+_position = _position modelToWorld [0,0,0];
+_position = [_position,5,20,5,0,2000,0] call BIS_fnc_findSafePos;
 
 if ((count _position) == 2) then
 {

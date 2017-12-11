@@ -166,5 +166,5 @@ _key call server_hiveWrite;
 	dze_waiting = "success";
 	(owner _activatingPlayer) publicVariableClient "dze_waiting";
 	
-	diag_log ("[СЕРВЕР] - [server_publishVehicle2.sqf]: ПУБЛИЧНО: " + str(_activatingPlayer) + " АпДрейднут " + (_class) + " с ID " + str(_uid));
+	diag_log ("[СЕРВЕР] - [server_publishVehicle2.sqf]: ПУБЛИЧНО: " + str(_activatingPlayer) + " Улучшен " + (_class) + " с ID " + str(_uid));
 };

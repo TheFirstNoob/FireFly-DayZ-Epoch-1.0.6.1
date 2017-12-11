@@ -1,36 +1,29 @@
-/*
-Spawns crash sites at the beginning of mission and periodically during it.
-
-Author:
-	Foxy
-*/
-
 #include "\z\addons\dayz_code\util\Math.hpp"
 #include "\z\addons\dayz_code\util\Vector.hpp"
 #include "\z\addons\dayz_code\loot\Loot.hpp"
 
-//Spawn frequency ± variance in minutes
+//Частота появления ± рандомность в минутах
 #define SPAWN_FREQUENCY 25
 #define SPAWN_VARIANCE 20
 
-//The higher the number, the more accurate the timer is.
-//Must be positive and non-zero.
+// Чем выше число, тем точнее таймер.
+// Только больше 0 и не может быть отрицательным.
 #define TIMER_RESOLUTION 10
 
-//Chance to spawn a crash site
+// Шанс спавна ХелиКраша
 #define SPAWN_CHANCE 0.75
 
-//Parameters for finding a suitable position to spawn the crash site
+// Параметры создания хеликраша (позиция)
 #define SEARCH_CENTER getMarkerPos "crashsites"
 #define SEARCH_RADIUS (getMarkerSize "crashsites") select 0
 #define SEARCH_DIST_MIN 20
 #define SEARCH_SLOPE_MAX 2
 #define SEARCH_BLACKLIST [[[2092,14167],[10558,12505]]]
 
-//Number of crash sites to spawn at the beginning of the mission
+// Кол-во ХелиКрашей на старте миссии
 #define INITIAL_NUM 1
 
-//Number of loot items to spawn per site
+// Кол-во лута на ХелиКрашах (мин-макс)
 #define LOOT_MIN 5
 #define LOOT_MAX 8
 
@@ -55,13 +48,13 @@ private
 	"_time"
 ];
 
-diag_log format ["CRASHSPAWNER: Starting crash site spawner. Frequency: %1±%2 min. Spawn chance: %3", SPAWN_FREQUENCY, SPAWN_VARIANCE, SPAWN_CHANCE];
+diag_log format ["[СЕРВЕР] - [server_spawnCrashSites.sqf]: ХелиКраш: Запускаем ХелиКраш. Частота: %1±%2 мин. Шанс Спавна: %3", SPAWN_FREQUENCY, SPAWN_VARIANCE, SPAWN_CHANCE];
 
 _spawnCrashSite =
 {
-	_type = Loot_SelectSingle(Loot_GetGroup("CrashSiteType"));
-	_class = _type select 1;
-	_lootGroup = Loot_GetGroup(_type select 2);
+	_type 		= 	Loot_SelectSingle(Loot_GetGroup("CrashSiteType"));
+	_class 		= 	_type select 1;
+	_lootGroup 	= 	Loot_GetGroup(_type select 2);
 	
 	_position = [SEARCH_CENTER, 0, SEARCH_RADIUS, SEARCH_DIST_MIN, 0, SEARCH_SLOPE_MAX, 0, SEARCH_BLACKLIST] call BIS_fnc_findSafePos;
 	_position set [2, 0];
@@ -72,6 +65,7 @@ _spawnCrashSite =
 	
 	//_vehicle = createVehicle ["ClutterCutter_small_2_EP1", _position, [], 0, "CAN_COLLIDE"];
 	//_vehicle = createVehicle [_class, _position, [], 0, "CAN_COLLIDE"];
+	
 	_vehicle = "ClutterCutter_small_2_EP1" createVehicle _position;
 	_vehicle = _class createVehicle [0,0,0];
 	dayz_serverObjectMonitor set [count dayz_serverObjectMonitor, _vehicle];
@@ -82,12 +76,12 @@ _spawnCrashSite =
 	_lootParams = getArray (configFile >> "CfgVehicles" >> _class >> "lootParams");
 	
 	{
-		_dir = random 360;
-		_mag = random (_lootParams select 4);
-		_lootPos = [((_lootParams select 2) + _mag) * sin _dir, ((_lootParams select 3) + _mag) * cos _dir, 0];
-		_lootPos = Vector_Add(_lootPos, _lootParams select 0);
-		_lootPos = Vector_Rotate2D(_lootPos, _lootParams select 1);
-		_lootPos = _vehicle modelToWorld _lootPos;
+		_dir 		= 	random 360;
+		_mag 		= 	random (_lootParams select 4);
+		_lootPos 	= 	[((_lootParams select 2) + _mag) * sin _dir, ((_lootParams select 3) + _mag) * cos _dir, 0];
+		_lootPos 	= 	Vector_Add(_lootPos, _lootParams select 0);
+		_lootPos 	= 	Vector_Rotate2D(_lootPos, _lootParams select 1);
+		_lootPos 	= 	_vehicle modelToWorld _lootPos;
 		_lootPos set [2, 0];
 		
 		_lootVeh = Loot_Spawn(_x, _lootPos);
@@ -95,19 +89,19 @@ _spawnCrashSite =
 		
 		switch (dayz_spawnCrashSite_clutterCutter) do
 		{
-			case 1: //Lift loot up by 5cm
+			case 1: // Поднимаем лут на 5 см
 			{
 				_lootPos set [2, 0.05];
 				_lootVeh setPosATL _lootpos;
 			};
 			
-			case 2: //Clutter cutter
+			case 2: //Clutter cutter - Трава? Я не помню что это
 			{
 				//createVehicle ["ClutterCutter_small_2_EP1", _lootPos, [], 0, "CAN_COLLIDE"];
 				"ClutterCutter_small_2_EP1" createVehicle _lootPos;
 			};
 			
-			case 3: //Debug sphere
+			case 3: // Сфера для откладки
 			{
 				//createVehicle ["Sign_sphere100cm_EP1", _lootPos, [], 0, "CAN_COLLIDE"];
 				"Sign_sphere100cm_EP1" createVehicle _lootPos;
@@ -117,7 +111,7 @@ _spawnCrashSite =
 	forEach Loot_Select(_lootGroup, _lootNum);
 };
 
-//Spawn initial crash sites
+// Инициализация ХелиКраша
 for "_i" from 1 to (INITIAL_NUM) do
 {
 	call _spawnCrashSite;
@@ -125,17 +119,17 @@ for "_i" from 1 to (INITIAL_NUM) do
 
 while {true} do
 {
-	//Pick a time to attempt spawning
-	//currentTime + frequency + ±1 * variance
+	// Берем время спавна
+	// currentTime + frequency + ±1 * variance
 	_time = time + 60 * ((SPAWN_FREQUENCY) + ((round random 1) * 2 - 1) * random (SPAWN_VARIANCE));
 	
-	//Wait until the previously decided time
+	// Подождем
 	while {time < _time} do
 	{
 		uiSleep (60 * (SPAWN_FREQUENCY) / (TIMER_RESOLUTION));
 	};
 	
-	//try to spawn
+	// Попытка заспавнить
 	if ((SPAWN_CHANCE) > random 1) then
 	{
 		call _spawnCrashSite;

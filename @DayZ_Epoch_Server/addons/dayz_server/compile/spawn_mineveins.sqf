@@ -11,12 +11,7 @@ if ((count _position) == 2) then
 	
 	_spawnveh = ["Iron_Vein_DZE","Iron_Vein_DZE","Iron_Vein_DZE","Iron_Vein_DZE","Iron_Vein_DZE","Silver_Vein_DZE","Silver_Vein_DZE","Silver_Vein_DZE","Gold_Vein_DZE","Gold_Vein_DZE"] call BIS_fnc_selectRandom;	
 	
-	/*
-		Переведу и оставлю для Расширенной откладки, которую я сделаю позже.
-		Переменная: Server_AdvancedDebug = true;
-
-		diag_log ("[СЕРВЕР] - [spawn_mineveins.sqf]: ОТКЛАДКА: Спавним Руду " + _spawnveh + " c " + _spawnloot + " на позиции " + str(_position));
-	*/
+	//diag_log("DEBUG: Spawning a crashed " + _spawnveh + " with " + _spawnloot + " at " + str(_position));		// Позже!
 	
 	//_veh = createVehicle [_spawnveh,_position, [], 0, "CAN_COLLIDE"];
 	_veh = _spawnveh createVehicle [0,0,0];
