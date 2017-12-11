@@ -1,18 +1,8 @@
-/*
-Spawns care packages.
-
-Single parameter:
-	integer		Number of care packages to spawn.
-
-Author:
-	Foxy
-*/
-
 #include "\z\addons\dayz_code\util\Math.hpp"
 #include "\z\addons\dayz_code\util\Vector.hpp"
 #include "\z\addons\dayz_code\loot\Loot.hpp"
 
-//Number of care packages to spawn
+// Чисто Групп лута
 #define SPAWN_NUM 6
 
 #define SEARCH_CENTER getMarkerPos "carepackages"
@@ -41,23 +31,23 @@ _typeGroup = Loot_GetGroup("CarePackageType");
 
 for "_i" from 1 to (SPAWN_NUM) do
 {
-	_type = Loot_SelectSingle(_typeGroup);
-	_class = _type select 1;
-	_lootNum = round Math_RandomRange(_type select 2, _type select 3);
-	_position = [SEARCH_CENTER, 0, SEARCH_RADIUS, SEARCH_DIST_MIN, 0, SEARCH_SLOPE_MAX, 0, SEARCH_BLACKLIST] call BIS_fnc_findSafePos;
+	_type 		= 	Loot_SelectSingle(_typeGroup);
+	_class 		= 	_type select 1;
+	_lootNum 	= 	round Math_RandomRange(_type select 2, _type select 3);
+	_position 	= 	[SEARCH_CENTER, 0, SEARCH_RADIUS, SEARCH_DIST_MIN, 0, SEARCH_SLOPE_MAX, 0, SEARCH_BLACKLIST] call BIS_fnc_findSafePos;
 	_position set [2, 0];
 	
-	diag_log format ["DEBUG: Spawning a care package (%1) at %2 with %3 items.", _class, _position, _lootNum];
+	diag_log format ["[СЕРВЕР] - [server_spawnCarePackages.sqf]: ОТКЛАДКА: Спавним ящик с лутом (%1) на %2 с %3 предметами.", _class, _position, _lootNum];
 	
 	//_vehicle = createVehicle [_class, _position, [], 0, "CAN_COLLIDE"];
 	_vehicle = _class createVehicle _position;
 	dayz_serverObjectMonitor set [count dayz_serverObjectMonitor, _vehicle];
 	_vehicle setVariable ["ObjectID", 1, true];
-		
+
 	_size = sizeOf _class;
 	
 	{
-		//Calculate random loot position
+		// Получаем рандомно позицию ящика
 		_lootPos = Vector_Add(_position, Vector_Multiply(Vector_FromDir(random 360), _size * 0.6 + random _size));
 		_lootPos set [2, 0];
 		
@@ -66,19 +56,19 @@ for "_i" from 1 to (SPAWN_NUM) do
 				
 		switch (dayz_spawncarepkgs_clutterCutter) do
 		{
-			case 1: //Lift loot up by 5cm
+			case 1: // Поднимем на 5 см
 			{
 				_lootPos set [2, 0.05];
 				_lootVeh setPosATL _lootpos;
 			};
 			
-			case 2: //Clutter cutter
+			case 2: // Clutter cutter - Трава? Я не помню что это
 			{
 				//createVehicle ["ClutterCutter_small_2_EP1", _lootPos, [], 0, "CAN_COLLIDE"];
 				"ClutterCutter_small_2_EP1" createVehicle _lootPos;
 			};
 			
-			case 3: //Debug sphere
+			case 3: // Сфера для откладки
 			{
 				//createVehicle ["Sign_sphere100cm_EP1", _lootPos, [], 0, "CAN_COLLIDE"];
 				"Sign_sphere100cm_EP1" createVehicle _lootPos;
