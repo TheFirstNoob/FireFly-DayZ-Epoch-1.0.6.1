@@ -25,9 +25,10 @@ if (_playerID == "") exitWith
 
 private "_dummy";
 _dummy = getPlayerUID _playerObj;
+
 if (_playerID != _dummy) then
 { 
-	diag_log format["[СЕРВЕР] - [server_playerSetup.sqf]: ОТКЛАДКА: _playerID не совпадает с UID! _playerID:%1",_playerID]; 
+	diag_log format["[СЕРВЕР] - [server_playerSetup.sqf]: ОТКЛАДКА: _playerID не совпадает с UID! _playerID: %1",_playerID]; 
 	
 	_playerID = _dummy;
 };
@@ -37,10 +38,10 @@ _state 			= 	[];
 
 // Попытка подключения
 _doLoop = 0;
-while {_doLoop < 5} do
-{
-	_key = format["CHILD:102: %1:",_characterID];
-	_primary = _key call server_hiveReadWrite;
+while {_doLoop < 5} do {
+	
+	_key 		= 	format["CHILD:102:%1:",_characterID];
+	_primary 	= 	_key call server_hiveReadWrite;
 	
 	if (count _primary > 0) then
 	{
@@ -72,18 +73,12 @@ _humanity 		= 	_primary select 5;
 _lastInstance 	=	_primary select 6;
 _randomSpot 	= 	false; 				// Установим позицию
 
-_statearray = if (count _primary >= 4) then 
-				{
-					_primary select 3
-				}
-				else
-				{
-					[""]
-				};
+_statearray = if (count _primary >= 4) then {_primary select 3} else {[""]};
+
 if (count _statearray == 0) then
 {
 	_statearray = [""];
-}; 
+};
 /*
 	Переведу и оставлю для Расширенной откладки, которую я сделаю позже.
 	Переменная: Server_AdvancedDebug = true;
@@ -95,6 +90,7 @@ if (typeName ((_statearray) select 0) == "STRING") then
 {
 	_statearray = [_statearray,[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]];
 };
+
 _state = (_statearray) select 0;
 /*
 	Переведу и оставлю для Расширенной откладки, которую я сделаю позже.
@@ -139,10 +135,7 @@ if (count _worldspace > 0) then
 	//_playerObj setPosATL _position;
 	
 	// Берем из другой Инстанции для случайного спавна
-	if (_lastInstance != dayZ_instance) then
-	{
-		_randomSpot = true;
-	};
+	if (_lastInstance != dayZ_instance) then {_randomSpot = true;};
 }
 else
 {
@@ -181,7 +174,7 @@ if (count _medical > 0) then
 	_playerObj setVariable ["messing",if (count _medical >= 14) then {(_medical select 13)} else {[0,0,0]},true];
 	_playerObj setVariable ["blood_testdone",if (count _medical >= 15) then {(_medical select 14)} else {false},true];
 	
-	if (count _medical > 12 && {typeName (_medical select 11) == "STRING"}) then	// У старого персонажа не было "messing" или "messing" на месте blood_type
+	if (count _medical > 12 && {typeName (_medical select 11) == "STRING"}) then		// У старого персонажа не было "messing" или "messing" был на месте blood_type
 	{
 		_playerObj setVariable ["blood_type",(_medical select 11),true];
 		_playerObj setVariable ["rh_factor",(_medical select 12),true];
@@ -207,15 +200,13 @@ else
 	_playerObj setVariable ["hit_hands",0,true];
 	_playerObj setVariable ["USEC_injured",false,true];
 	_playerObj setVariable ["USEC_inPain",false,true];
-	_playerObj call player_bloodCalc; // установим blood_type и rh_factor согласно статистике
-	
+	_playerObj call player_bloodCalc; 					// установим blood_type и rh_factor согласно статистике
 	/*
 		Переведу и оставлю для Расширенной откладки, которую я сделаю позже.
 		Переменная: Server_AdvancedDebug = true;
 
 		diag_log [ "Данные игрока Установка: blood_type,rh_factor=",_playerObj getVariable ["blood_type", "?"],_playerObj getVariable ["rh_factor", "?"]];
 	*/
-	
 	_playerObj setVariable ["messing",[0,0,0],true];
 	_playerObj setVariable ["blood_testdone",false,true];
 };
@@ -234,7 +225,7 @@ if (count _stats > 0) then
 	
 	_playerObj addScore (_stats select 1);
 	
-	// Сохраняем результат 
+	// Сохраняем результат
 	_score = score _playerObj;
 	_playerObj addScore ((_stats select 0) - _score);
 
@@ -285,8 +276,8 @@ if (_randomSpot) then
 	_findSpot 	= 	true;
 	_mkr 		= 	[];
 	_position 	= 	[0,0,0];
-	for [{_j=0}, {_j<=100 && _findSpot}, {_j=_j+1}] do
-	{
+	
+	for [{_j=0}, {_j<=100 && _findSpot}, {_j=_j+1}] do {
 		if (_spawnSelection == 9) then
 		{
 			// Рандомная точка спавна выбрана, получаем маркер и спавним где-нибудь
@@ -306,38 +297,39 @@ if (_randomSpot) then
 		};
 		
 		_position = ([_mkr,0,spawnArea,10,0,2,spawnShoremode] call BIS_fnc_findSafePos);
-		if ((count _position >= 2) 		// !Плохая возвращаемая позиция
-			&& {(_position distance _mkr < spawnArea)}) then 		// !Вне зоны
-			{
-				_position set [2, 0];
-			
-				if (((ATLtoASL _position) select 2 > 2.5) 		// !Игрок в воде
-				&& {({alive _x} count (_position nearEntities ["CAManBase",150]) == 0)}) then	 // !Слишком близко к другим игрокам/зомби
+		
+		if ((count _position >= 2) // !Плохая возвращаемая позиция
+			&& {(_position distance _mkr < spawnArea)}) then	// !Вне зоны
 				{
-					_pos 		= 	+(_position);
-					_isIsland 	= 	false; 			// Во время проверки может быть значение true
-					
-					// Проверяем 809-метров линии, с шагом в 5 метров
-					for [{_w = 0}, {_w != 809}, {_w = ((_w + 17) % 811)}] do 
+					_position set [2, 0];
+				
+					if (((ATLtoASL _position) select 2 > 2.5) // !Игрок в воде
+					&& {({alive _x} count (_position nearEntities ["CAManBase",150]) == 0)}) then 	// !Слишком близко к другим игрокам/зомби
 					{
-						//if (_w < 17) then
-						//{
-						//	diag_log format[[СЕРВЕР] - [server_playerSetup.sqf]: "%1 цикл начат с _w=%2", __FILE__, _w];
-						//};
-					_pos = [((_pos select 0) - _w),((_pos select 1) + _w),(_pos select 2)];
+						_pos 		= 	+(_position);
+						_isIsland 	= 	false; 		// Во время проверки может быть значение true
 					
-					if ((surfaceisWater _pos) && !_IslandMap) exitWith
-					{
-						_isIsland = true;
+						// Проверяем 809-метров линии, с шагом в 5 метров
+						for [{_w = 0}, {_w != 809}, {_w = ((_w + 17) % 811)}] do {
+
+							//if (_w < 17) then
+							//{
+							//	diag_log format[[СЕРВЕР] - [server_playerSetup.sqf]: "%1 цикл начат с _w=%2", __FILE__, _w];
+							//};
+							
+							_pos = [((_pos select 0) - _w),((_pos select 1) + _w),(_pos select 2)];
+							if ((surfaceisWater _pos) && !_IslandMap) exitWith
+							{
+								_isIsland = true;
+							};
+						};
+						if (!_isIsland) then
+						{
+							_findSpot = false
+						};
 					};
 				};
-				if (!_isIsland) then
-				{
-					_findSpot = false
-				};
-			};
-		};
-		
+
 		/*
 			Переведу и оставлю для Расширенной откладки, которую я сделаю позже.
 			Переменная: Server_AdvancedDebug = true;
@@ -345,7 +337,6 @@ if (_randomSpot) then
 			diag_log format["[СЕРВЕР] - [server_playerSetup.sqf]: %1: Позиция:%2 _findSpot:%3", __FILE__, _position, _findSpot];
 		*/
 	};
-	
 	if (_findSpot && !_IslandMap) exitWith
 	{
 		diag_log format["[СЕРВЕР] - [server_playerSetup.sqf]: %1: Ошибка, Не удалось найти подходящее место для спавна игрока. Зона: %2",__FILE__, _mkr];
@@ -382,5 +373,5 @@ if (count _inventory > 2) then
 [_playerID,_characterID,1,(_playerObj call fa_plr2str),((_worldspace select 1) call fa_coor2str)] call dayz_recordLogin;
 
 PVDZ_plr_Login1 = null;
-[_playerObj] spawn Ultima_Proc_Server_Admin_Data;	// Строка для сервера FireFly (*/Scripts/Ultima_Admin/*). Если у вас Нет этого скрипта - Удалите строчку!
+[_playerObj] spawn Ultima_Proc_Server_Admin_Data;	// Строка для сервера FireFly (WOG Epoch) (*/Scripts/Ultima_Admin/*). Если у вас Нет этого скрипта - Удалите строчку!
 PVDZ_plr_Login2 = null;

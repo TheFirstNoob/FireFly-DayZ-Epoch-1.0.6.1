@@ -12,7 +12,7 @@ _clientID 	= 	owner _character;
 
 PVDZE_plr_DeathBResult = PlayerDeaths;
 
-if(!isNull _character) then
+if (!isNull _character) then
 {
 	_clientID publicVariableClient "PVDZE_plr_DeathBResult";
 };

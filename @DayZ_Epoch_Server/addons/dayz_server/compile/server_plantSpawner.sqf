@@ -15,14 +15,12 @@ PVCDZ_plr_plantSpawner = [ _a, _b, _c, [] ];
 	diag_log ["[СЕРВЕР] - [server_plantSpawner.sqf]: [ __FILE__, _a, _b, _c ];
 */
 
-"PVDZ_objgather_Delete" addPublicVariableEventHandler
-{
+"PVDZ_objgather_Delete" addPublicVariableEventHandler {
 	private [ "_pos", "_blacklist"];
 	_pos = (_this select 1);
 
 	_blacklist = PVCDZ_plr_plantSpawner select 3;
 	_blacklist set [ count _blacklist, _pos ];
-	
 	/*
 		Переведу и оставлю для СИСТЕМНОЙ откладки, которую я сделаю позже.
 		Переменная: Server_SystemDebug = true;

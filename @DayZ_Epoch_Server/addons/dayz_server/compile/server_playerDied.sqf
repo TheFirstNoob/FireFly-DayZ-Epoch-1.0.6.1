@@ -1,4 +1,4 @@
-﻿#include "\z\addons\dayz_server\compile\server_toggle_debug.hpp"
+#include "\z\addons\dayz_server\compile\server_toggle_debug.hpp"
 
 private ["_characterID","_minutes","_newObject","_playerID","_playerName","_key","_pos","_infected","_sourceName","_sourceWeapon","_distance","_message","_method","_suicide","_bodyName","_type"];
 // [unit, weapon, muzzle, mode, ammo, magazine, projectile]
@@ -29,10 +29,9 @@ if (typeName _minutes == "STRING") then
 	_minutes = parseNumber _minutes;
 };
 
-if (_characterID != "0") then 
+if (_characterID != "0") then
 {
 	_key = format["CHILD:202:%1:%2:%3:",_characterID,_minutes,_infected];
-	
 	/*
 		Переведу и оставлю для Расширенной БД откладки, которую я сделаю позже.
 		Переменная: Server_AdvancedDBDebug = true;
@@ -106,6 +105,7 @@ if (_playerName != "unknown" or _sourceName != "unknown") then
 		case "killed": {format [localize "str_player_death_killed", _bodyName, _message select 2, _message select 3, _message select 4]};
 		case "suicide": {format [localize "str_player_death_suicide", _bodyName]};
 	};
+
 	diag_log format["[СЕРВЕР] - [server_playerDied.sqf]: Сообщение о смерти: %1",_message];
 };
 

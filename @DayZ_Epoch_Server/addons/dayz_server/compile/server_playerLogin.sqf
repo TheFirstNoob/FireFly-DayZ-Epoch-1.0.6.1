@@ -5,6 +5,7 @@ private ["_playerID","_endMission","_0","_1","_timeleft","_doLoop","_key","_prim
 _playerID 		= 	_this select 0;
 _playerObj 		= 	_this select 1;
 _playerName 	= 	name _playerObj;
+
 if (_playerName == '__SERVER__' || _playerID == '' || local player) exitWith {};
 
 // Отменяет Логин до не завершатся процедуры server_monitor.
@@ -49,19 +50,19 @@ _timeleft 		= 	0;
 		// Если игрок вышел в Наблюдателе (Призрак), то удалить его из Наблюдателя.
 		if ((_timeleft > dayz_ghostTimer) or (_timeleft < 0)) then
 		{
-			dayz_ghostPlayers = dayz_ghostPlayers - [_0];
+			dayz_ghostPlayers 	= 	dayz_ghostPlayers - [_0];
 			dayz_activePlayers set [_forEachIndex, _0];
-			dayz_activePlayers = dayz_activePlayers - [_0];
+			dayz_activePlayers 	= 	dayz_activePlayers - [_0];
 		}
 		else
 		{
 			// Если игрок умер.
 			if (_playerID in dayz_died) then
 			{
-				dayz_died = dayz_died - [_playerID];
-				dayz_ghostPlayers = dayz_ghostPlayers - [_0];
+				dayz_died 			= 	dayz_died - [_playerID];
+				dayz_ghostPlayers 	= 	dayz_ghostPlayers - [_0];
 				dayz_activePlayers set [_forEachIndex, _0];
-				dayz_activePlayers = dayz_activePlayers - [_0];
+				dayz_activePlayers 	= 	dayz_activePlayers - [_0];
 			}
 			else
 			{
@@ -74,10 +75,10 @@ _timeleft 		= 	0;
 
 // Попытка подключения
 _doLoop = 0;
-while {_doLoop < 5} do
-{
-	_key 		= 	format["CHILD:101: %1: %2: %3:",_playerID,dayZ_instance,_playerName];
-	_primary 	= 	_key call server_hiveReadWrite;
+while {_doLoop < 5} do {
+	
+	_key = format["CHILD:101:%1:%2:%3:",_playerID,dayZ_instance,_playerName];
+	_primary = _key call server_hiveReadWrite;
 	
 	if (count _primary > 0) then
 	{
@@ -96,7 +97,7 @@ if (isNull _playerObj or !isPlayer _playerObj) exitWith
 
 if ((_primary select 0) == "ERROR") exitWith
 {
-    diag_log format ["[СЕРВЕР] - [server_playerLogin.sqf]: ЛОГИН РЕЗУЛЬТАТ: Выход, неудачная загрузка _primary: %1 для игрока ",_primary,_playerID];
+    diag_log format ["[СЕРВЕР] - [server_playerLogin.sqf]: ЛОГИН РЕЗУЛЬТАТ: Выход, неудачная загрузка _primary: %1 для игрока: %2 ",_primary,_playerID];
 };
 
 // Запрос процесса
@@ -109,7 +110,7 @@ _charID 	= 	_primary select 2;
 		
 	diag_log ("[СЕРВЕР] - [server_playerLogin.sqf]: ЛОГИН РЕЗУЛЬТАТ: " + str(_primary));
 */
-_hiveVer 	= 	0;
+_hiveVer = 0;
 
 if (!_isNew) then
 {
@@ -127,25 +128,11 @@ if (!_isNew) then
 	if !(_model in AllPlayers) then
 	{
 		_model = "Survivor2_DZ";
-	}
-	else
-	{
-		if (_model == "") then
-		{
-			_model = "Survivor2_DZ";
-		};
 	};
 }
 else
 {
-	_isInfected = if (DZE_PlayerZed) then 
-					{
-						_primary select 3
-					}
-					else
-					{
-						0
-					};
+	_isInfected 	= 	if (DZE_PlayerZed) then {_primary select 3} else {0};
 	_model 			= 	_primary select 4;
 	_group 			= 	_primary select 5;
 	_playerCoins 	= 	_primary select 6;
@@ -172,12 +159,23 @@ else
 		_wpns 		= 	getArray (_config >> "weapons");
 		_bcpk 		= 	getText (_config >> "backpack");
 		
-		if (!isNil "DefaultMagazines") then 	{_mags = DefaultMagazines;};
-		if (!isNil "DefaultWeapons") then 		{_wpns = DefaultWeapons;};
-		if (!isNil "DefaultBackpack") then 		{_bcpk = DefaultBackpack;};
+		if (!isNil "DefaultMagazines") then
+		{
+			_mags = DefaultMagazines;
+		};
+		
+		if (!isNil "DefaultWeapons") then
+		{
+			_wpns = DefaultWeapons;
+		};
+		
+		if (!isNil "DefaultBackpack") then 
+		{
+			_bcpk = DefaultBackpack;
+		};
 	
 		// Ждем когда База Данных будет свободна
-		_key = format["CHILD:203: %1: %2: %3:",_charID,[_wpns,_mags],[_bcpk,[],[]]];
+		_key = format["CHILD:203:%1:%2:%3:",_charID,[_wpns,_mags],[_bcpk,[],[]]];
 		_key call server_hiveWrite;
 	};
 };
@@ -187,7 +185,7 @@ _isHiveOk = (_hiveVer >= dayz_hiveVersionNo);
 /*
 	if (count _inventory > 2 && {typeName (_inventory select 2) != "STRING"}) then
 	{
-		//Pre 1.0.6 character with Zupa 3.0 coins where dayz_onBack should be. Wipe coins and log playerID and amount to RPT.
+		//Pre 1.0.6 character в Zupa 3.0 coins где dayz_onBack должен быть. Очищаем coins и Логируем (playerID и Кол-во) в RPT.
 		
 		diag_log format["[СЕРВЕР] - [server_playerLogin.sqf]: %1 - Обновляем pre 1.0.6 игрока для добавления в dayz_onBack. Монеты будут удалены для PlayerID: %2 Прошлые монеты: %3",__FILE__,_playerID,(_inventory select 2)];
 		
