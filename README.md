@@ -3,8 +3,6 @@
 
 FireFly - Это российский сервер с упором на хардкор. Сервер приватный!
 
-Доступ к этому серверу можно получить только у [TheFirstNoob](http://s-platoon.ru/profile/923-thefirstnoob/)
-
 Автор сборки: [TheFirstNoob](http://s-platoon.ru/profile/923-thefirstnoob/)
 
 * Вопрос: Почему выкладываю?
@@ -54,6 +52,21 @@ P.S: Большая нагрузка на ЖД из-за логов.
 Тестеры:
 --------------------------
 [Wild Fire Army] (Weekly Open Games):  
-* [WFA] TheFirstNoob (s-platoon/Arma/Epoch/WOG)
-* [WFA] Kennig (Arma/Epoch/WOG)
-* [WFA] Agentos (Arma/Epoch/WOG)
+* [WFA] TheFirstNoob
+* [WFA] Kennig
+* [WFA] Agentos
+* [WFA] Zain
+* [A+] Lankaster
+* [LG] Kalkhin
+* [LG] c0ma
+* [LG] Immortal
+* [LG] GreeN
+* [LG] ncsKombat
+* [LG] Jackie
+* [LG] Gamer
+* [SF] DevastaTOR
+* [SF] REKETIR
+* [RSG] Opozdant
+* [RSG] Dtyz
+* [RSG]Dgors
+* [FMF]Sidekick
