@@ -1,4 +1,6 @@
 while {true} do {
-	diag_log format["SERVER FPS: %1  PLAYERS: %2",round diag_fps,playersNumber west];
+	
+	diag_log format["[CЕРВЕР] - [s_fps.sqf]: ПРОИЗВОДИТЕЛЬНОСТЬ: СЕРВЕРНЫЙ FPS: %1  ИГРОКОВ: %2",round diag_fps,playersNumber west];
+	
 	uiSleep 360;
 };

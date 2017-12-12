@@ -1,4 +1,3 @@
-
 _base="z\addons\dayz_server\system\scheduler\";
 
 call compile preprocessFileLineNumbers (_base+"sched_corpses.sqf");
@@ -10,7 +9,7 @@ call compile preprocessFileLineNumbers (_base+"sched_sync.sqf");
 call compile preprocessFileLineNumbers (_base+"sched_safetyVehicle.sqf");
 
 [
-	// period	offset	code <-> ctx				init code ->ctx
+	// Период	Оффсет	Код <-> ctx				init код ->ctx
 	 //[ 60, 	121,	sched_playersHivesync,      sched_playersHivesync_init ],
 	 //[ 60, 	133,	sched_vehiclesHivesync,     sched_vehiclesHivesync_init ],
 	 [ 60,	 	224,	sched_corpses ],
@@ -21,7 +20,7 @@ call compile preprocessFileLineNumbers (_base+"sched_safetyVehicle.sqf");
 	 //[ 0.1, 		1,		sched_traps ]
 ] execFSM ("z\addons\dayz_code\system\scheduler\scheduler.fsm");
 
-//diag_log [ __FILE__, "Scheduler started"];
+//diag_log [ __FILE__, "Scheduler started"];		// Позже
 
 
 

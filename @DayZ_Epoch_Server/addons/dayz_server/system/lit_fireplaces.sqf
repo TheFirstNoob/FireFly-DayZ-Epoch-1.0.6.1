@@ -1,15 +1,22 @@
-// (c) facoptere@gmail.com, licensed to DayZMod for the community
 private ["_blocked","_flame","_position"];
 {
-	_blocked = false;
-	_position = _x;
-	{if (_position distance _x < 150) exitWith {_blocked = true;};} forEach dayz_townGeneratorBlackList;
-	if (!_blocked && (random 1 < 0.33)) then {
+	_blocked 	= 	false;
+	_position 	= 	_x;
+	{
+		if (_position distance _x < 150) exitWith
+		{
+			_blocked = true;
+		};
+	} forEach dayz_townGeneratorBlackList;
+	
+	if (!_blocked && (random 1 < 0.33)) then
+	{
 		_flame = "flamable_DZ" createVehicle [0,0,0]; //200x faster https://community.bistudio.com/wiki/Code_Optimisation#createVehicle.28Local.29
 		_flame setPosATL _x;
 		_flame inflame true;  
 		_flame setVariable ["permaLoot",true]; // = won't be removed by the cleaner, cf. sched_lootpiles.sqf
 	};
+	
 	uiSleep 0.001;
 } count [ 
 	[11580.2,3391.72,-1.20629], [11604.4,3389.41,0.0161071], [11664.6,3415.82,-0.524297], [11678.4,3421.32,-0.526046], [11681.4,3409.25,0.028707], 

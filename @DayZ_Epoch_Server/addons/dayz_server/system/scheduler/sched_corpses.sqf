@@ -1,6 +1,7 @@
 #include "\z\addons\dayz_server\compile\server_toggle_debug.hpp"
 
-sched_co_deleteVehicle = {
+sched_co_deleteVehicle =
+{
 	private "_group";
 	_this removeAllMPEventHandlers "mpkilled";
 	_this removeAllMPEventHandlers "mphit";
@@ -17,33 +18,43 @@ sched_co_deleteVehicle = {
 	clearVehicleInit _this;
 	_group = group _this;
 	deleteVehicle _this;
-	if (count units _group == 0) then {
+	
+	if (count units _group == 0) then
+	{
 		deleteGroup _group;
 	};
-		
+
 	_this = nil;
 };
 
 
-sched_corpses = {
+sched_corpses =
+{
 	private ["_delQtyG","_delQtyZ","_delQtyP","_addFlies","_x","_deathTime","_onoff","_delQtyAnimal","_sound","_deathPos","_cpos","_animal","_nearPlayer"];
-	// EVERY 2 MINUTE
-	// DELETE UNCONTROLLED ZOMBIES --- PUT FLIES ON FRESH PLAYER CORPSES --- REMOVE OLD FLIES & CORPSES
-	_delQtyZ = 0;
-	_delQtyP = 0;
-	_delQtyG = 0;
-	_addFlies = 0;
+	// УДАЛЯЕМ КАЖДЫЕ 2 МИНУТЫ
+	// УДАЛЯЕМ НЕКОНТРОЛЛИРУЕМЫХ ЗОМБИ --- КЛАДЕМ МУХ НА ТРУП --- УДАЛЯЕМ СТАРЫЕ ТРУПЫ И МУХ
+	_delQtyZ 	= 	0;
+	_delQtyP 	= 	0;
+	_delQtyG 	= 	0;
+	_addFlies 	= 	0;
 	{
-		if (local _x && {_x isKindOf "CAManBase"}) then {
-			if (_x isKindOf "zZombie_Base") then {
+		if (local _x && {_x isKindOf "CAManBase"}) then
+		{
+			if (_x isKindOf "zZombie_Base") then
+			{
 				_x call sched_co_deleteVehicle;
 				_delQtyZ = _delQtyZ + 1;
-			} else {
-				//Only spawn flies on actual dead player, otherwise delete the body (clean up left over ghost from relogging, sometimes it is not deleted automatically by Arma or onPlayerDisconnect)
-				//AI mods will need to setVariable "bodyName" on their dead units to prevent them being cleaned up
+			}
+			else
+			{
+				// Спавнит мух только на новые трупы, в противном случае удалит тело
+				// AI необходимо будет setVariable "bodyName" на их мертвых телах, чтобы предотвратить их очистку
 				_deathTime = _x getVariable ["sched_co_deathTime", -1];
-				if (_x getVariable["bodyName",""] != "") then {
-					if (_deathTime == -1) then {
+				
+				if (_x getVariable["bodyName",""] != "") then
+				{
+					if (_deathTime == -1) then
+					{
 						/*_deathPos = _x getVariable ["deathPos",respawn_west_original];
 						_cpos = getPosATL _x;
 						// forbid a move further than 50 meters, or burried body (antihack)
@@ -53,63 +64,87 @@ sched_corpses = {
 						};*/
 						_deathTime = diag_tickTime;
 						_x setVariable ["sched_co_deathTime", _deathTime];
-						if (dayz_enableFlies) then {
+						
+						if (dayz_enableFlies) then
+						{
 							_x setVariable ["sched_co_fliesAdded", true];
 							_addFlies = _addFlies + 1;
 						};
 					};
-					// 40 minutes = how long a player corpse stays on the map
-					if (diag_tickTime - _deathTime > 40*60) then {
-						if (_x getVariable["sched_co_fliesDeleted",false] or !dayz_enableFlies) then {
-							// flies have been switched off, we can delete body
+					
+					// 40 минут = Как долго будут трупы на карте
+					if (diag_tickTime - _deathTime > 40*60) then
+					{
+						if (_x getVariable["sched_co_fliesDeleted",false] or !dayz_enableFlies) then
+						{
+							// Отключаем мух, труп может быть удален
 							_sound = _x getVariable ["sched_co_fliesSource", nil];
 							
-							if !(isNil "_sound") then {
+							if !(isNil "_sound") then
+							{
 								detach _sound;
 								deleteVehicle _sound;
 							};
 							
 							_x call sched_co_deleteVehicle;
 							_delQtyP = _delQtyP + 1;
-						} else {
+						}
+						else
+						{
 							PVCDZ_flies = [ 0, _x ];
 							publicVariable "PVCDZ_flies";
 							_x setVariable ["sched_co_fliesDeleted", true];
-							// body will be deleted at next round
+							// Тело будет удалено в следующий раз
 						};
-					} else {
-						// Do not spawn flies immediately after death. Wait 10 minutes.
+					}
+					else
+					{
+						// Не спавним мух сразу после смерти. Ждем 10 минут.
 						if ((diag_tickTime - _deathTime < 10*60) or !dayz_enableFlies) exitWith {};
+						
 						_onoff = 1;
-						// remove flies on heavy rain.
+						// Удаляем мух если идет дождь.
 						if (rain > 0.25) then { _onoff = 0; };
-						// switch flies sound on/off. 
-						// sound must be deleted/respawned periodically because new players won't ear it otherwise, 
-						// and other players would ear it several times (very loud noise)
+						
+						// Переключаем звук мух on/off. 
+						// Звук должен быть удален/переспавнен периодически потому что новые игроки не будут слышать звук, 
+						// а другие игроки слышали бы его кучу раз (Это правда неприятный громкий звук)
 						_sound = _x getVariable ["sched_co_fliesSource", nil];
-						if !(isNil "_sound") then {
+						if !(isNil "_sound") then
+						{
 							detach _sound;
 							deleteVehicle _sound;
 							_x setVariable ["sched_co_fliesSource", nil];
-							//diag_log "delete sound";
+							
+							//diag_log "delete sound";		// Если надо
 						};
-						if (_onoff == 1) then {
+						
+						if (_onoff == 1) then
+						{
 							_sound = createSoundSource["Sound_Flies",getPosATL _x,[],0];
 							_sound attachTo [_x];
 							_x setVariable ["sched_co_fliesSource", _sound];
-							//diag_log "create sound";
+							
+							//diag_log "create sound";		// Если надо
 						};
-						// broadcast flies status for everyone periodically, to update visible swarm
+						
+						// Обновляем статус мух периодически, чтобы обновить визуально рой
 						PVCDZ_flies = [ _onoff, _x ];
 						publicVariable "PVCDZ_flies";
 					};
-				} else {
-					if (_deathTime == -1) then {
+				}
+				else
+				{
+					if (_deathTime == -1) then
+					{
 						_deathTime = diag_tickTime;
 						_x setVariable ["sched_co_deathTime", _deathTime];
-					} else {
-						// Wait 30s to make sure the server had time to setVariable "bodyName". PVDZ_plr_Death can be delayed by a few seconds.
-						if (diag_tickTime - _deathTime > 30) then {
+					}
+					else
+					{
+						// Подождите 30 секунд, чтобы убедиться, что сервер успел на setVariable "bodyName". PVDZ_plr_Death может иметь небольшую задержку.
+						if (diag_tickTime - _deathTime > 30) then
+						{
 							_x call sched_co_deleteVehicle;
 							_delQtyG = _delQtyG + 1;
 						};
@@ -122,26 +157,31 @@ sched_corpses = {
 	_delQtyAnimal = 0;
 	{
 		_animal = _x;
-		if (local _animal) then {
+		if (local _animal) then
+		{
 			_nearPlayer = {isPlayer _x} count (_animal nearEntities ["CAManBase",150]);
-			if (_nearPlayer == 0) then {
+			
+			if (_nearPlayer == 0) then
+			{
 				_animal call sched_co_deleteVehicle;
 				_delQtyAnimal = _delQtyAnimal + 1;
 			};
 		};
 	} forEach entities "CAAnimalBase";
 
-	_delQtyGrp=0;
+	_delQtyGrp = 0;
 	{
-		if (count units _x==0) then {
+		if (count units _x == 0) then
+		{
 			deleteGroup _x;
 			_delQtyGrp = _delQtyGrp + 1;
 		};
 	} forEach allGroups;
 	
 #ifdef SERVER_DEBUG
-	if (_delQtyZ+_delQtyP+_addFlies+_delQtyGrp+_delQtyG > 0) then {
-		diag_log format ["%1: Deleted %2 uncontrolled zombies, %3 uncontrolled animals, %4 dead character bodies, %7 ghosts and %5 empty groups. Added %6 flies.",__FILE__,
+	if (_delQtyZ+_delQtyP+_addFlies+_delQtyGrp+_delQtyG > 0) then
+	{
+		diag_log format ["[СЕРВЕР] - [sched_corpses.sqf]: СИНХРОНИЗАЦИЯ: %1: Удалено %2 неконтроллируемых Зомби, %3 неконтроллируемых Животных, %4 Мертвых тел, %7 Призраков %5 пустых Групп. Добавлено %6 мух.",__FILE__,
 		_delQtyZ,_delQtyAnimal,_delQtyP,_delQtyGrp,_addFlies,_delQtyG];
 	};
 #endif

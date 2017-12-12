@@ -1,4 +1,3 @@
-
 _lootype = _this select 0;
 _lootobj = _this select 1;
 _lootref = _this select 2;
@@ -33,13 +32,13 @@ switch (_lootype) do
 	
 	case "Spawned_Loot":
 	{
-		//diag_log("Spawned Loot");
+		//diag_log("Spawned Loot");		// Если надо
 		deleteVehicle _lootobj;
 	};
 	
 	case "Perma_Loot":
 	{
-		//diag_log("Perma Loot");	
+		//diag_log("Perma Loot");		// Если надо
 	};
 };
 
