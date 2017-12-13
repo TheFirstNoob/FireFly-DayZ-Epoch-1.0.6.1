@@ -1,116 +1,217 @@
-// EPOCH CONFIG VARIABLES //
+dayz_enableRules 	=	true;		// Новости, правила и т.п. при логине
+dayz_quickSwitch 	= 	false; 		// Переключать оружие (ХотКей 1,2,3) False = Вкл Анимацию / True = Выкл
 
-// To change a variable copy paste it in the mission init.sqf below the #include line.
-// Standard DayZ variables are found in dayz_code\init\variables.sqf.
+// Изменение температуры
+dayz_temperature_override 	= 	false; 		// Отключить изменение температуры
+// [Техника +, Костер +, Постройка +, Движение +, Солнце +, Грелка +, Вода -, Стоячий -, Дождь -, Ветер -, Ночь -]
+// Вода -, Стоячий -, Дождь -, Ветер -, Ночь - сильно влияют на температуру. Чем больше значение для них, тем быстрее игрок мерзнет.
+DZE_TempVars = [7, 15, 4, 4, 2, 6, 3, 2, 0.25, 0.75, 0.5];
 
-dayz_knifeDulling = false; // Enable knife dulling. Knives need to be sharpened after so many uses.
-dayz_matchboxCount = false; // Enable match stick count. After five uses matches run out and must be replaced.
-dayz_toolBreaking = false; //Sledgehammer, crowbar and pickaxe have a chance to break when used.
-dayz_waterBottleBreaking = false; // Water bottles have a chance to break when boiling and require duct tape to fix
-dayz_tameDogs = false; // Allow taming dogs with raw meat. Note dog behavior is experimental and buggy.
-dayz_townGenerator = false; // Spawn vanilla map junk instead of Epoch DynamicDebris. Currently only compatible with Chernarus. Also enables comfrey plant spawner which negatively impacts performance.
-dayz_townGeneratorBlackList = []; // If townGenerator is enabled it will not spawn junk within 150m of these positions. Example for Chernarus traders: [[4053,11668,0],[11463,11349,0],[6344,7806,0],[1606,7803,0],[12944,12766,0],[5075,9733,0],[12060,12638,0]]
-DZE_TempVars = [7, 15, 4, 4, 2, 6, 3, 2, 0.25, 0.75, 0.5]; //[vehicle, fire, building, moving, sun, heatpack, water, standing, rain, wind, night] water, standing, rain, wind and night factors have a negative impact on temperature. The greater they are the quicker the player gets cold.
-DZE_WeatherVariables = [10, 20, 5, 10, 0, 0.2, 0, 0.7, 0, 0.6, 0, 8, 25, 30, 0, false]; //See DynamicWeatherEffects.sqf for info on these values.
-DZE_TwoPrimaries = 2; // 0 do not allow primary weapon on back. 1 allow primary weapon on back, but not when holding a primary weapon in hand. 2 allow player to hold two primary weapons, one on back and one in their hands.
-DZE_AntiWallLimit = 3; // Number of activations before player_antiWall kills player for glitching attempt. Lower is stricter, but may result in false positives.
-DZE_DamageBeforeMaint = 0.09; // Min damage built items must have before they can be maintained
-DZE_NameTags = 0; // Name displays when looking at player up close  0 = Off, 1= On, 2 = Player choice
-DZE_ForceNameTagsInTrader = false; // Force name display when looking at player up close in traders. Overrides player choice.
-DZE_HumanityTargetDistance = 25; // Distance to show name tags (red for bandit, blue for hero, green for friend)
-DZE_HeartBeat = false; // Enable heartbeat sound when looking at bandit (<= -3000 humanity) up close
-DZE_HeliLift = true; // Enable Epoch heli lift system
-DZE_RestrictSkins = []; // Clothes that players are not allowed to wear. i.e. ["Skin_GUE_Soldier_CO_DZ","Skin_GUE_Soldier_2_DZ"] etc.
-DZE_UI = "vanilla"; //"vanilla","epoch","dark"  UI status icons style. Dark accommodates color blind people.
-DZE_VanillaUICombatIcon = true; //Display or hide combat UI icon if using DZE_UI = "vanilla"; otherwise it has no affect.
-timezoneswitch = 0; // Changes murderMenu times with this offset in hours.
-DZE_NoVehicleExplosions = false; //Disable vehicle explosions to prevent damage to objects by ramming. Doesn't work with amphibious pook which should not be used due to FPS issues.
-DZE_SafeZonePosArray = []; //Prevent players in safeZones from being killed if their vehicle is destroyed. Format is [[[3D POS], RADIUS],[[3D POS], RADIUS]]; Ex. DZE_SafeZonePosArray = [[[6325.6772,7807.7412,0],150],[[4063.4226,11664.19,0],150]];
-DZE_SafeZoneNoBuildItems = []; // Array of object class names not allowed to build near the safe zones listed above. i.e ["VaultStorageLocked","LockboxStorageLocked","Plastic_Pole_EP1_DZ"] etc.
-DZE_SafeZoneNoBuildDistance = 150; // Distance from safe zones listed above to disallow building near.
-DZE_NoBuildNear = []; //Array of object class names that are blacklisted to build near. i.e ["Land_Mil_ControlTower","Land_SS_hangar"] etc.
-DZE_NoBuildNearDistance = 150; // Distance from blacklisted objects to disallow building near.
-DZE_GodModeBaseExclude = []; //Array of object class names excluded from the god mode bases feature
-DZE_salvageLocked = true; //Enable or disable salvaging of locked vehicles, useful for stopping griefing on locked vehicles.
-DZE_DisabledChannels = [(localize "str_channel_side"),(localize "str_channel_global"),(localize "str_channel_command")]; //List of disabled voice channels. Other channels are: "str_channel_group","str_channel_direct","str_channel_vehicle"
-DZE_NutritionDivisor = [1, 1, 1, 1]; //array of DIVISORS that regulate the rate of [calories, thirst, hunger, temperature] use when "working" (keep in mind that temperature raises with actions) - min values 0.1
+// Динамичная техника
+MaxVehicleLimit 			= 	300; 	// Всего рандомной техники на карте
+DynamicVehicleDamageLow 	= 	70; 	// Мин. урон по технике при спавне (% = 0 - 100)
+DynamicVehicleDamageHigh 	= 	100; 	// Макс. урон по технике при спавне (% = 0 - 100)
+DynamicVehicleFuelLow 		= 	5; 		// Мин. бензина в технике при спавне (% = 0 - 100)
+DynamicVehicleFuelHigh 		= 	20; 	// Макс. бензина в технике при спавне (% = 0 - 100)
 
-// Death Messages
-DZE_DeathMsgChat = "none"; //"none","global","side","system" Display death messages in selected chat channel.
-DZE_DeathMsgDynamicText = false; // Display death messages as dynamicText in the top left with weapon icons.
-DZE_DeathMsgRolling = false; // Display death messages as rolling messages in bottom center of screen.
-DZE_DeathScreen = true; // True=Use Epoch death screen (Trade city obituaries have been amended) False=Use DayZ death screen (You are dead)
-DZE_ServerLogHits = false; // Log damage source, weapon, distance and ammo to server RPT for player hits. Useful for detecting damage and ammo cheats.
+MaxDynamicDebris 			=	0;		// Мусор рандом на карте
+MaxAmmoBoxes 				=	0; 		// Ящики рандом на карте
+MaxMineVeins 				=	0; 		// Руды рандом на карте
 
-// Dynamic Vehicles
-DynamicVehicleDamageLow = 0; // Min damage random vehicles can spawn with
-DynamicVehicleDamageHigh = 100; // Max damage random vehicles can spawn with
-DynamicVehicleFuelLow = 0; // Min fuel random vehicles can spawn with
-DynamicVehicleFuelHigh = 100; // Max fuel random vehicles can spawn with
-MaxAmmoBoxes = 3; // Max number of random Supply_Crate_DZE filled with vehicle ammo to spawn around the map
-MaxMineVeins = 50; // Max number of random mine veins to spawn around the map
+DZE_NameTags 				=	2; 			// Отображать ник когда игрок рядом:  0 = Выкл, 1 = Вкл, 2 = Игрок сам выбирает
+DZE_ForceNameTagsInTrader 	=	true; 		// Отображать ник в торговой зоне (Игнорирует выбор игрока)
+DZE_HumanityTargetDistance 	=	10; 		// Дистанция отображения имени (Красный - Бандит, Синий - Герой, Зеленый - Друг)
 
-// HALO Jump
-DZE_HaloAltitudeMeter = false; // Display altitude and speed on screen while in halo jump.
-DZE_HaloOpenChuteHeight = 180; // Automatically open chute at specified height. Set to -1 to disable this feature.
-DZE_HaloSpawnHeight = 2000; // This is the altitude fresh spawn players start at when HALO spawn is enabled.
-DZE_HaloJump = true; // Enable halo jumping out of air vehicles above 400m
+dayz_knifeDulling 			=	true; 		// Охотничий нож может ломаться
+dayz_matchboxCount 			=	true; 		// Спички могут закончиться
+dayz_toolBreaking 			=	true; 		// Кувалда, Кирка и Ломик могут ломаться
+dayz_waterBottleBreaking 	=	true; 		// Фляга может сломаться при нагревании и требует Скотча (ленты)
 
-// Trader Menu
-DZE_ConfigTrader = true; // Use config files for traders instead of database. Loads faster and uses less network traffic. False enables database traders with legacy trader menu.
-DZE_serverLogTrades = true; // Log trades to server RPT (sent with publicVariableServer on every trade)
-DZE_GemOccurance = [["ItemTopaz",10], ["ItemObsidian",8], ["ItemSapphire",6], ["ItemAmethyst",4], ["ItemEmerald",3], ["ItemCitrine",2], ["ItemRuby",1]]; //Sets how rare each gem is in the order shown when mining (whole numbers only)
-DZE_GemWorthArray = [["ItemTopaz",15000], ["ItemObsidian",20000], ["ItemSapphire",25000], ["ItemAmethyst",30000], ["ItemEmerald",35000], ["ItemCitrine",40000], ["ItemRuby",45000]]; // Array of gem prices, only works with config traders. Set DZE_GemWorthArray=[]; to disable return change in gems.
-DZE_SaleRequiresKey = false; // Require the player has the key for a vehicle in order to sell it. The key can be in the player's toolbelt, backpack, or the vehicle's inventory.
-DZE_TRADER_SPAWNMODE = false; // Vehicles purchased at traders will be parachuted in
-Z_VehicleDistance = 40; // Max distance a vehicle can be sold or accessed from at a trader.
-Z_AllowTakingMoneyFromBackpack = true; // Allow traders to take money from backpacks when buying with default currency.
-Z_AllowTakingMoneyFromVehicle = true; // Allow traders to take money from vehicles when buying with default currency.
-Z_SingleCurrency = false; // Does your server use a single currency system?
-CurrencyName = "Coins"; // If using single currency this is the currency display name.
-Z_MoneyVariable = "cashMoney"; // If using single currency this is the variable name used to store player wealth.
-DZE_MoneyStorageClasses = []; // If using single currency this is an array of object classes players can store coins in.
+dayz_tameDogs 				=	false;		// Приручать собак (Баганный скрипт)
+dayz_ForcefullmoonNights 	= 	false; 		// Луна ночью
+dayz_randomMaxFuelAmount 	= 	500;		// Значение бензина на заправках
+DZE_HeartBeat 				=	true; 		// Ваше сердце бьется, если на вас смотрит Бандит (<= -3000 человечности)
+DZE_HeliLift 				=	false; 		// Стандартная система Транспортировки техники (Плохая)
+DZE_salvageLocked 			=	true; 		// Взлом техники
+DZE_NoVehicleExplosions 	=	false; 		// Отключить взрыв техники
+DZE_TwoPrimaries 			= 	2;			// 0 - Нельзя осн. оружие на спину. 1 - Можно оружие на спину, но нельзя держать в руках. 2 - Можно два оружие. Осн. + на спине
+DZE_AntiWallLimit 			= 	3;			// Число предупреждении для player_antiWall перед убийством за багоюз со стенками. Меньше - строже, но может быть ложным
+DZE_BackpackAntiTheft		=	false; 		// Защита Рюкзаков в торг.зонах (Плохая)
 
-// Plot Management and Plot for Life
-DZE_permanentPlot = true; // Plot ownership saves after death. Enables Plot for Life by @RimBlock and Plot Management by @DevZupa.
-DZE_plotManagementMustBeClose = false; //Players must be within 10m of pole to be added as a plot friend.
-DZE_PlotManagementAdmins = []; //Array of admin PlayerUIDs. UIDs in this list are able to access every pole's management menu and delete or build any buildable with a pole nearby.
-DZE_MaxPlotFriends = 10; //Max friends allowed on a plot. There is no character limit in the inventory field of the database, but lower values limit the max global setVariable size to improve performance.
-DZE_maintainCurrencyRate = 100; //The currency rate of what maintaining an item will be, for instance: at 100, 10 items will have a worth of 1000 (1 10oz gold or 1k coins) see actions/maintain_area.sqf for more examples.
-DZE_isRemovable = ["Plastic_Pole_EP1_DZ"]; //Items that can be removed with a crowbar with no ownership or access required. To forbid base take overs remove plot pole from this list and add it to DZE_restrictRemoval. It is not necessary to add wrecks or items that inherit from 'BuiltItems' to this list.
-DZE_restrictRemoval = ["Fence_corrugated_DZ","M240Nest_DZ","ParkBench_DZ","FireBarrel_DZ","Scaffolding_DZ","CanvasHut_DZ","LightPole_DZ","DeerStand_DZ","MetalGate_DZ","StickFence_DZ"]; //Items that can be removed with a crowbar only with proper ownership or access. It is not necessary to add doors, storage or items that inherit from 'ModularItems' to this list. Items that inherit from 'BuiltItems' can be added to this list if desired.
+DZE_NameTags 				= 	2; 			// Отображать ник когда игрок рядом:  0 = Выкл, 1 = Вкл, 2 = Игрок сам выбирает
+DZE_ForceNameTagsInTrader 	= 	true; 		// Отображать ник в торговой зоне (Игнорирует выбор игрока).
+DZE_HumanityTargetDistance 	= 	10; 		// Дистанция отображения имени (Красный - Бандит, Синий - Герой, Зеленый - Друг)
 
-// Snap Build and Build Vectors
-DZE_modularBuild = true; // Enable Snap Building by @raymix and Build Vectors by @strikerforce.
-DZE_snapExtraRange = 0; // Increase the default range from which objects can snap by this many meters.
-DZE_noRotate = []; // List of objects (magazine classnames) that cannot be rotated. Example: ["ItemVault","ItemTent","ItemDomeTent","ItemDesertTent"];
-DZE_vectorDegrees = [0.01, 0.1, 1, 5, 15, 45, 90]; // Degree positions players are able to rotate buildables with using the build vectors action menu.
-DZE_curDegree = 45; // Starting rotation angle. Prefer any value in the array above.
-DZE_dirWithDegrees = true; // When rotating objects with Q&E, use the custom degrees.
-DZE_buildMaxMoveDistance = 10; // Max distance player can walk from start position when building. Anything >= the differnce between DZE_PlotPole values is not recommended (allows walking into other plots).
-DZE_buildMaxHeightDistance = 10; // Max distance player can raise or lower object from start position when building.
+DZE_RestrictSkins = []; 		// Запрещенные скины для переодевания.
+
+DZE_UI = "vanilla"; 				// "vanilla","epoch","dark"  UI Иконки. "dark" ночью плохо видно.
+DZE_VanillaUICombatIcon = false; 	// Спрятать Иконку (в бою!) (Если DZE_UI = "vanilla"; Не сработает).
+
+dayz_paraSpawn				=	false; 		// HALO Спавн (С прыжка НЕ ПРИВЯЗАН К СКРИПТУ HALO)
+spawnArea					=	1400;		// Радиус от точки спавна, где игрок может быть отспавнен (динамичный спавн)
+spawnShoremode				=	1;			// Динамичный спавн (1 - Поиск от точки / 0 - В точку)
+
+DZE_PlayerZed				=	false; 		// При заражении игрок после смерти станет Зомби
+DZE_slowZombies				=	false; 		// Зомби всегда ходят
+dayz_DamageMultiplier		=	2;			// Множитель урона Зомби (1 и 0 - Выкл)
+dayz_maxGlobalZeds			=	500;		// Общее кол-во Зомби на Сервере
+
+DZE_R3F_WEIGHT				=	true; 		// Система Веса
+
+DZE_SelfTransfuse 			= 	false; 		// Самозаливка крови
+DZE_selfTransfuse_Values 	= 	[12000,15,120]; 	// [Сколько дать крови, Шанс заражения %, Время до новой заливки]
+
+DZE_SafeZonePosArray			=	[];		// Предотвращать убийство игроков в торг. зонах, если их автомобиль уничтожен. Пример: [[[3D POS], RADIUS],[[3D POS], RADIUS]]; Ex. DZE_SafeZonePosArray = [[[6325.6772,7807.7412,0],150],[[4063.4226,11664.19,0],150]];
+DZE_SafeZoneNoBuildItems		=	[];		// Что нельзя размещать в торг. зонах. Пример: ["VaultStorageLocked","LockboxStorageLocked","Plastic_Pole_EP1_DZ"]
+DZE_SafeZoneNoBuildDistance		=	150;	// Дистанция запрета
+
+DZE_StaticConstructionCount 	= 	0; 			// Сколько шагов стройки. 0 = по умолчанию / 0 > Применяется ко всем.
+
+DZE_requireplot 				= 	1; 			// Требуется ли Плот 1 - Да / 0 - Нет
+DZE_PlotPole 					= 	[30,45]; 	// Радиус Плота для Базы [Сколько база, через сколько можно поставить новый плот]
+DZE_BuildOnRoads 				= 	false; 		// Можно ли строить на дорогах?
+DZE_BuildingLimit 				= 	150; 		// Сколько построек можно в зоне DZE_PlotPole
+DZE_NoBuildNear 				= 	[]; 		// Рядом с какими Постройками НЕЛЬЗЯ строить. Пример: ["Land_Mil_ControlTower","Land_SS_hangar"].
+DZE_NoBuildNearDistance 		= 	150; 		// Дистанция запрета.
+DZE_GodModeBase 				= 	false; 		// Защита построенных баз от урона
+DZE_GodModeBaseExclude 			= 	[]; 		// Что не будет защищено Бессмертием построек. Пример: ["VaultStorageLocked"].
+DZE_DamageBeforeMaint			= 	0.09;		// Минимальный урон, для починки построек внутри зоны.
+
+// Пресет
+dayz_presets = "Custom"; //"Custom","Classic","Vanilla","Elite"
+
+if (dayz_presets == "Custom") then
+{
+	dayz_enableGhosting 					= 	false;		// Спектатор при смерти
+	dayz_ghostTimer 						= 	60; 		// Время спектатора (после autologin)
+	dayz_spawnselection 					= 	0; 			// Выбор спавна (Только для черно). Мне это нахрен не надо
+	dayz_spawncarepkgs_clutterCutter 		= 	0; 			// Ящики: 0 = лут в траве, 1 = поднят, 2 = без травы
+	dayz_spawnCrashSite_clutterCutter 		= 	0;			// ХелиКраш: 0 = лут в траве, 1 = поднят, 2 = без травы
+	dayz_spawnInfectedSite_clutterCutter 	= 	0; 			// Зараж. лагеря: 0 = лут в траве, 1 = поднят, 2 = без травы
+	dayz_bleedingeffect 					= 	2; 			// Эффект крови: 1 = кровь на земле (Сажает ФПС), 2 = только частицы, 3 = Оба
+	dayz_OpenTarget_TimerTicks 				= 	60 * 10; 	// Как долго можно свободно атаковать игрока, который был не спровоцирован (В БОЮ!)
+	dayz_nutritionValuesSystem 				= 	true; 		// Система питания
+	dayz_classicBloodBagSystem 				= 	false; 		// Исп. старую систему крови (без групп)
+	dayz_enableFlies 						= 	false; 		// Добавлять Мух на трупы (Сажает ФПС) Надо потестить
+};
+
+DZE_NutritionDivisor = [1, 1, 1, 1]; //Массивы для Жажды/Пищи. [Каллории, Жажда, Голод, Температура] если используется "working" (Температура повышается) - Мин. значение - 0.1
+
+EpochUseEvents = false;
+EpochEvents = [["any","any","any","any",30,"crash_spawner"],["any","any","any","any",0,"crash_spawner"],["any","any","any","any",15,"supply_drop"]];
+
+// Snap Build и Build Vectors
+DZE_modularBuild 			= 	true; 								// Включить Snap Building и Build Vectors?
+DZE_snapExtraRange 			= 	0; 									// Увеличить значение насколько можно "Связывать" объекты
+DZE_noRotate 				= 	["ItemVault"]; 						// Что нельзя крутить/наклонять. Пример: ["ItemVault","ItemTent","ItemDomeTent","ItemDesertTent"];
+DZE_vectorDegrees 			= 	[0.01, 0.1, 1, 5, 15, 45, 90]; 		// Углы поворота, которые будут использованы в Скролл Меню
+DZE_curDegree 				= 	45; 								// Начальный угол поворота
+DZE_dirWithDegrees 			= 	true; 								// Можно использовать поворот через Q&E при значении из DZE_curDegree
+DZE_buildMaxMoveDistance 	= 	5; 									// Макс. расстояние которое может пройти игрок при стройке. Любое зачение >= абузит DZE_PlotPole значение (Уходят за зону и строят)
+DZE_buildMaxHeightDistance 	= 	5; 									// Макс. расстояние которое игрок может вытянуть постройку по высоте
+
+// Сообщение о смерти
+DZE_DeathMsgChat 			= 	"none";		// "none","global","side","system" Отображать сообщения о смерти в каналах
+DZE_DeathMsgDynamicText 	= 	false; 		// Сообщения о смерти внизу слева
+DZE_DeathMsgRolling 		= 	false; 		// Сообщения о смерти по центру
+DZE_DeathScreen 			= 	true; 		// Экран смерти: True = Epoch / False = DayZ
+DZE_ServerLogHits 			= 	true; 		// Логгировать в RPT урон
 
 // Door Management
-DZE_doorManagement = true; // Enable Door Management by @DevZupa. 
-DZE_doorManagementMustBeClose = false; //Players must be within 10m of door to be added as a door friend.
-DZE_doorManagementAdmins = []; //Array of admin PlayerUIDs. UIDs in this list are able to access every door's management menu and open it.
-DZE_doorManagementAllowManualCode = true; //Allow unlocking doors by manually entering the combination. Setting false requires the use of eye scan for all doors.
-DZE_doorManagementMaxFriends = 10; //Max friends allowed on a door. There is no character limit in the inventory field of the database, but lower values limit the max global setVariable size to improve performance.
-DZE_doorManagementHarderPenalty = true; //Enforce an exponential wait on attempts between unlocking a door from a failed code.
+DZE_doorManagement 					=	true; 		// Использовать Door Management?
+DZE_doorManagementMustBeClose 		= 	true; 		// Чтобы добавить игрока в Дверь он должен быть рядом (10м)
+DZE_doorManagementAdmins 			= 	[]; 		// UID Администрации для доступа ко всем Дверям
+DZE_doorManagementAllowManualCode 	= 	true; 		// Открыть дверь можно и Комбинацией. Если - false, то требуется только Сканнер глаз
+DZE_doorManagementMaxFriends 		= 	10; 		// Всего друзей за 1 Дверь. Меньше - лучше для Базы Данных (setVariable)
+DZE_doorManagementHarderPenalty 	= 	true; 		// Запрещать доступ к Дверь на время после неудачной попытки
 
-// Group System
-dayz_groupSystem = false; // Enable group system
-dayz_markGroup = 1; // Players can see their group members on the map 0=never, 1=always, 2=With GPS only
-dayz_markSelf = 0; // Players can see their own position on the map 0=never, 1=always, 2=With GPS only
-dayz_markBody = 0; // Players can see their corpse position on the map 0=never, 1=always, 2=With GPS only
-dayz_requireRadio = false; // Require players to have a radio on their toolbelt to create a group, be in a group and receive invites.
+// Plot Management и Plot for Life
+DZE_permanentPlot 				= 	true; 		// Использовать Plot Management и P4L?
+DZE_plotManagementMustBeClose 	= 	true; 		// Чтобы добавить игрока в Плот он должен быть рядом (10м)
+DZE_PlotManagementAdmins 		= 	[]; 		// UID Администрации для доступа ко всем Плотам
+DZE_MaxPlotFriends 				= 	10; 		// Всего друзей за 1 плот. Меньше - лучше для Базы Данных (setVariable)
+DZE_maintainCurrencyRate 		= 	100; 		// Множитель Оплаты построек: Если 100, то при 10 Постройках будет 1000 (1 10oz gold или 1k coins). Смотрите actions/maintain_area.sqf для большей инфы
 
-/* 
-	Developers:
-	
-	This file's purpose is to slim down init.sqf to only the map specific and most frequently changed variables.
-	It cuts down on the amount of if(isNil)then{}; statements in variables.sqf and makes the mission smaller.
-	
-	Variables that are map specific or frequently changed should be included in init.sqf by default
-	with a corresponding if(isNil)then{}; in variables.sqf.
+/*
+	Предметы которые могут быть убраны без Хозяев или Доступа.
+	(Обратное: DZE_restrictRemoval)
+	Нет необходимости добавлять ID что уже хранятся в 'BuiltItems'
 */
+DZE_isRemovable =
+[
+	"Plastic_Pole_EP1_DZ"
+];
+
+/*
+	Предметы которые могут быть убраны только с Хозяеами или Доступом.
+	(Обратное: DZE_isRemovable)
+	Нет необходимости добавлять ID что уже хранятся в 'ModularItems'
+	Элементы из 'BuiltItems' можно добавить сюда при необходимости
+*/
+DZE_restrictRemoval =
+[
+	"Fence_corrugated_DZ"
+	,"M240Nest_DZ"
+	,"ParkBench_DZ"
+	,"FireBarrel_DZ"
+	,"Scaffolding_DZ"
+	,"CanvasHut_DZ"
+	,"LightPole_DZ"
+	,"DeerStand_DZ"
+	,"MetalGate_DZ"
+	,"StickFence_DZ"
+];
+
+// HALO Jump
+DZE_HaloAltitudeMeter 		= 	false; 		// Отображать Высоту и скорость на экране при прыжке
+DZE_HaloOpenChuteHeight 	= 	180; 		// Высота для автооткрытия парашюта. (-1 = Выкл)
+DZE_HaloSpawnHeight 		= 	2000; 		// Высота откуда будет прыжок
+DZE_HaloJump 				= 	true; 		// HALO Прыжок с технки если высота > 400м
+
+// Групповая система (Баганная)
+dayz_groupSystem 	= 	false; 	// Включить DZGM (Групповую систему)?
+dayz_markGroup 		= 	1; 		// Игроки могут видеть своих членов группы на карте 	0=Никогда, 1=Всегда, 2=Только с GPS
+dayz_markSelf 		= 	0; 		// Игроки могут видеть себя на карте 					0=Никогда, 1=Всегда, 2=Только с GPS
+dayz_markBody 		= 	0; 		// Игроки могут видеть свои трупы на карте 				0=Никогда, 1=Всегда, 2=Только с GPS
+dayz_requireRadio 	= 	false; 	// Требуется ли Радио?
+
+// Торговля
+DZE_ConfigTrader 		= 	true; 		// Откуда брать конфиг торговли. True - Работает быстрее и использует Интернет-Трафик / False - Брать из Базы Данных
+DZE_serverLogTrades 	= 	true; 		// Логгировать Торговлю (Использует: publicVariableServer)
+
+DZE_GemOccurance = 						// Редкость руды (Только цельное число)
+[
+	["ItemTopaz",10]
+	, ["ItemObsidian",8]
+	, ["ItemSapphire",6]
+	, ["ItemAmethyst",4]
+	, ["ItemEmerald",3]
+	, ["ItemCitrine",2]
+	, ["ItemRuby",1]
+];
+
+DZE_GemWorthArray =						// Цены руд. Используйте: DZE_GemWorthArray=[]; чтобы убрать настройки
+[
+	["ItemTopaz",15000]
+	, ["ItemObsidian",20000]
+	, ["ItemSapphire",25000]
+	, ["ItemAmethyst",30000]
+	, ["ItemEmerald",35000]
+	, ["ItemCitrine",40000]
+	, ["ItemRuby",45000]
+];
+
+DZE_SaleRequiresKey 	= 	true; 				// Для продажи покупной техники всегда нужен ключ. Ключ должен быть или: Инветарь, Рюкзак, Техника
+DZE_TRADER_SPAWNMODE 	= 	false; 				// При покупке техники она появляется на парашюте
+
+Z_VehicleDistance 				= 	30; 		// Дистанция продажи техники от торгоша (м)
+Z_AllowTakingMoneyFromBackpack 	= 	true; 		// Брать деньги из Рюкзака
+Z_AllowTakingMoneyFromVehicle 	= 	true; 		// Брать деньги из Техники
+
+Z_SingleCurrency 			= 	false; 			// Используется ли ZSC?
+CurrencyName 				= 	"Coins"; 		// Название валюты в ZSC
+Z_MoneyVariable 			= 	"cashMoney"; 	// Переменная валюты в ZSC
+DZE_MoneyStorageClasses 	= 	[]; 			// Если используется ZSC, то где можно хранить деньги
+
+timezoneswitch = 0; 				// Не трогать лучше.
+DZE_DisabledChannels = [(localize "str_channel_side"),(localize "str_channel_global"),(localize "str_channel_command")]; // Список отключенных каналов: "str_channel_group","str_channel_direct","str_channel_vehicle"

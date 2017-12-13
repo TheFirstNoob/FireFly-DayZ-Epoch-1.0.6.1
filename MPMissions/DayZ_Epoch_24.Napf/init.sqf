@@ -1,27 +1,23 @@
 // Настройки сервера
 dayZ_instance 		= 	24; 			// Инстанция (24 - Napf)
 dayZ_serverName 	= 	"FireFly"; 		// Водяной знак
+dayz_antihack		=	0;				// DayZ Antihack / 1 = Вкл / 0 = Выкл
+dayz_REsec			=	0;				// DayZ RE Security / 1 = Вкл / 0 = Выкл
 
 enableRadio false;
 enableSentences false;
 
-#include "Configs\init\Config_Toggle.sqf"		// ВЫСОКИЙ ПРИОРИТЕТ
-#include "Configs\init\Config_Values.sqf"		// ВЫСОКИЙ ПРИОРИТЕТ
+#include "configVariables.sqf"
 
-#include "Configs\init\Config_Buildings.sqf"
-#include "Configs\init\Config_DeathMessage.sqf"
-#include "Configs\init\Config_DoorManagement.sqf"
-#include "Configs\init\Config_DZGM.sqf"
-#include "Configs\init\Config_Event.sqf"
-#include "Configs\init\Config_HALO.sqf"
-#include "Configs\init\Config_PM_P4L.sqf"
-#include "Configs\init\Config_Preset.sqf"
-#include "Configs\init\Config_SnapVector.sqf"
-#include "Configs\init\Config_StartLoot.sqf"
-#include "Configs\init\Config_Trade.sqf"
-#include "Configs\init\Config_Vehicle.sqf"
+//DefaultMagazines = ["HandRoadFlare","ItemBandage","ItemPainkiller","8Rnd_9x18_Makarov","8Rnd_9x18_Makarov"];
+//DefaultWeapons = ["Makarov_DZ","ItemFlashlight"];
+//DefaultBackpack = "DZ_Patrol_Pack_EP1";
+//DefaultBackpackItems = [];
 
-#include "Configs\init\Unsorted.sqf"
+dayz_POIs 						= 	false; 		// Только для Черно (Сажает ФПС).
+dayz_infectiousWaterholes 		= 	false; 		// Только для Черно (Сажает ФПС).
+dayz_townGenerator 				= 	false;		// Только для Черно (Сажает ФПС).
+dayz_townGeneratorBlackList 	= 	[];
 
 diag_log 'dayz_preloadFinished reset';
 dayz_preloadFinished = nil;
@@ -80,6 +76,9 @@ if (dayz_REsec == 1) then
 	call compile preprocessFileLineNumbers "\z\addons\dayz_code\system\REsec.sqf";
 };
 
+// Изменение погоды
+// Смотри DynamicWeatherEffects.sqf для информации.
+DZE_WeatherVariables = [10, 20, 5, 10, 0, 0.2, 0, 0.7, 0, 0.6, 0, 8, 25, 30, 0, false];
 execVM "\z\addons\dayz_code\system\DynamicWeatherEffects.sqf";		// Динамичная погода
 
 if (isServer) then

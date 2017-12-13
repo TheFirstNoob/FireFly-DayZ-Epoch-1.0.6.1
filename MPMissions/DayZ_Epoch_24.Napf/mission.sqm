@@ -31,8 +31,8 @@ class Mission
 	randomSeed=11171215;
 	class Intel
 	{
-		briefingName="DayZ Epoch Napf";
-		briefingDescription="Version 1.0.6.1";
+		briefingName="FireFly DayZ Epoch Napf";
+		briefingDescription="Для хардкорных игроков!";
 		startWeather=0;
 		forecastWeather=0;
 		year=2008;

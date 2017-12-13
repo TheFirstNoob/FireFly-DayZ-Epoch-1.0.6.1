@@ -1,8 +1,8 @@
 respawn = "BASE";
 respawnDelay = 0;
 respawnDialog = 0;
-onLoadMission = "DayZ Epoch Napf";
-OnLoadIntro = "Welcome to Napf";
+onLoadMission = "FireFly DayZ Epoch Napf";
+OnLoadIntro = "Для Хардкорных игроков!";
 OnLoadIntroTime = 0;
 OnLoadMissionTime = 0;
 disabledAI = 1;
@@ -14,16 +14,16 @@ debriefing = 0;
 
 titleParam1 = "AutoLogin:";
 valuesParam1[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 31};
-defValueParam1 = 10; //auto login time limit in seconds, set value to 31 to disable auto login
+defValueParam1 = 10;
 textsParam1[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, "Disabled"};
 
 loadScreen = "loadingscreen.jpg";
 
 class Header
 {
-	gameType = COOP;            //DM, Team, Coop, ...
-	minPlayers = 1;             //min # of players the mission supports
-	maxPlayers = 100;            //Max # of players the mission supports
+	gameType = COOP;
+	minPlayers = 1;
+	maxPlayers = 100;
 };
 
 aiKills = 1;
