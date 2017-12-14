@@ -4,6 +4,8 @@ dayZ_serverName 	= 	"FireFly"; 		// Водяной знак
 dayz_antihack		=	0;				// DayZ Antihack / 1 = Вкл / 0 = Выкл
 dayz_REsec			=	0;				// DayZ RE Security / 1 = Вкл / 0 = Выкл
 
+dayz_ForcefullmoonNights 	= 	false; 		// Луна ночью
+
 enableRadio false;
 enableSentences false;
 
@@ -64,7 +66,6 @@ if (_verCheck) then
 progressLoadingScreen 0.25;
 
 call compile preprocessFileLineNumbers "server_traders.sqf";
-call compile preprocessFileLineNumbers "\z\addons\dayz_code\system\mission\napf.sqf";
 
 initialized = true;
 
@@ -78,8 +79,8 @@ if (dayz_REsec == 1) then
 
 // Изменение погоды
 // Смотри DynamicWeatherEffects.sqf для информации.
-DZE_WeatherVariables = [10, 20, 5, 10, 0, 0.2, 0, 0.7, 0, 0.6, 0, 8, 25, 30, 0, false];
-execVM "\z\addons\dayz_code\system\DynamicWeatherEffects.sqf";		// Динамичная погода
+//DZE_WeatherVariables = [10, 20, 5, 10, 0, 0.2, 0, 0.7, 0, 0.6, 0, 8, 25, 30, 0, false];
+//execVM "\z\addons\dayz_code\system\DynamicWeatherEffects.sqf";		// Динамичная погода
 
 if (isServer) then
 {
@@ -92,6 +93,9 @@ if (!isDedicated) then
 {
 	//execVM "\z\addons\dayz_code\system\antihack.sqf";
 	
+	execVM "Scripts\Snow\Snowstorm.sqf";	// Частицы снега
+	execVM "Scripts\Snow\Filter.sqf";		// Фильтр "Синий холод"
+
 	execFSM "\z\addons\dayz_code\system\player_monitor.fsm";
 
 	if (DZE_R3F_WEIGHT) then
