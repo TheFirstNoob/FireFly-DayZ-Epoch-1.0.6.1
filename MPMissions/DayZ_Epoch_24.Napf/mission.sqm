@@ -183,9 +183,10 @@ class Mission
 			};
 		};
 	};
+	
 	class Markers
 	{
-		items=25;
+		items = 22;
 		class Item0
 		{
 			position[]={10010,110,10448};
@@ -195,168 +196,146 @@ class Mission
 		};
 		class Item1
 		{
-			position[]={10153,0,-4593};
+			position[]={10153, 0.5, -4593};
 			name="respawn_west";
 			type="Empty";
 		};
 		class Item2
 		{
-			position[]={1511,6,11479};
+			position[]={1511, 6, 11479};
 			name="spawn0";
 			type="Empty";
 		};
 		class Item3
 		{
-			position[]={6946,7,17384};
+			position[]={6946, 7, 17385};
 			name="spawn1";
 			type="Empty";
 		};
 		class Item4
 		{
-			position[]={5410,7,16675};
+			position[]={5411, 7, 16676};
 			name="spawn2";
 			type="Empty";
 		};
 		class Item5
 		{
-			position[]={4672,8,14940};
+			position[]={4672.4092,8.506402,14940.254};
 			name="spawn3";
 			type="Empty";
 		};
 		class Item6
 		{
-			position[]={2719,3,12226};
+			position[]={2719.9617,3.2610674,12226.175};
 			name="spawn4";
 			type="Empty";
 		};
 		class Item7
 		{
-			position[]={12231,2,16319};
+			position[]={12231.441,2.585845,16319.117};
 			name="spawn5";
 			type="Empty";
 		};
 		class Item8
 		{
-			position[]={4104,22,13025};
+			position[]={4104.0498,22.422367,13025.828};
 			name="spawn6";
 			type="Empty";
 		};
 		class Item9
 		{
-			position[]={1460,0,10583};
+			position[]={1460.7332,0.55348521,10583.732};
 			name="spawn7";
 			type="Empty";
 		};
 		class Item10
 		{
-			position[]={10282,23,18449};
+			position[]={10282.8,23.0424,18449.203};
 			name="spawn8";
 			type="Empty";
 		};
 		class Item11
 		{
-			position[]={12861,2,14849};
+			position[]={12861.892,2.1743674,14849.523};
 			name="spawn9";
 			type="Empty";
 		};
 		class Item12
 		{
-			position[]={10709,33,17085};
+			position[]={10709.255,33.675358,17085.104};
 			name="spawn10";
 			type="Empty";
 		};
+
 		class Item13
+		{
+			position[]={15128, 5, 16421};
+			name="UnarmedAirVehicles";
+			text="AWOLs Airfield";
+			type="mil_dot";
+			colorName="ColorBlack";
+		};
+		class Item14
+		{
+			position[]={7665, 5, 11765};
+			name="Bandit";
+			text="Бандит";
+			type="mil_circle";
+			colorName="ColorRed";
+		};
+		class Item15
+		{
+			position[]={15930, 5, 10400};
+			name="Hero";
+			text="Герой";
+			type="mil_circle";
+			colorName="ColorBlue";
+		};
+		class Item16
+		{
+			position[]={3160, 5, 12110};
+			name="Allies1";
+			text="ТЗ Церковь";
+			type="mil_circle";
+			colorName="ColorGreen";
+		};
+		class Item17
+		{
+			position[]={9670, 5, 2955};
+			name="Allies2";
+			text="ТЗ Гора";
+			type="mil_circle";
+			colorName="ColorGreen";
+		};
+		class Item18
+		{
+			position[]={10580, 5, 13110};
+			name="Allies3";
+			text="ТЗ Бункер";
+			type="mil_circle";
+			colorName="ColorGreen";
+		};
+		class Item19
+		{
+			position[]={13155, 5, 6395};
+			name="Allies4";
+			text="ТЗ Сторож";
+			type="mil_circle";
+			colorName="ColorGreen";
+		};
+		class Item20
 		{
 			position[]={10010,110,10448};
 			name="crashsites";
 			type="Empty";
 			a=9000;b=9000;
 		};
-		class Item14
+		class Item21
 		{
 			position[]={10010,110,10448};
 			name="carepackages";
 			type="Empty";
 			a=9000;b=0;
-		};
-		class Item15
-		{
-			position[]={8246,15,15490};
-			name="NeutralTraderCity";
-			text="Trader City Lenzburg";
-			type="mil_circle";
-		};
-		class Item16
-		{
-			position[]={12397,216,5068};
-			name="FriendlyTraderCity";
-			text="Trader City Schratten";
-			type="mil_circle";
-			colorName="ColorGreen";
-		};
-		class Item17
-		{
-			position[]={5150,71,4862};
-			name="HeroVendor";
-			text="Hero Vendor";
-			type="mil_dot";
-			colorName="ColorBlue";
-		};
-		class Item18
-		{
-			position[]={15128,19,16421};
-			name="UnarmedAirVehicles";
-			text="AWOLs Airfield";
-			type="mil_dot";
-			colorName="ColorBlack";
-		};
-		class Item19
-		{
-			position[]={2125,13,7807};
-			name="West Wholesaler";
-			text="West Wholesaler";
-			type="mil_dot";
-			colorName="ColorBlack";
-		};
-		class Item20
-		{
-			position[]={5372,5,16091};
-			name="NorthWholesaler";
-			text="North Wholesaler";
-			type="mil_dot";
-			colorName="ColorBlack";
-		};
-		class Item21
-		{
-			position[]={6776,0,16955};
-			name="NorthBoatVendor";
-			text="Nordic Boats";
-			type="mil_dot";
-			colorName="ColorBlack";
-		};
-		class Item22
-		{
-			position[]={10404,106,8282};
-			name="BanditVendor";
-			text="Bandit Vendor";
-			type="mil_dot";
-			colorName="ColorRed";
-		};
-		class Item23
-		{
-			position[]={16835,-2,5268};
-			name="SouthBoatVendor";
-			text="Pauls Boats";
-			type="mil_dot";
-			colorName="ColorBlack";
-		};
-		class Item24
-		{
-			position[]={15520,5,13225};
-			name="NeutralTraderCIty2";
-			text="Trader city Emmen";
-			type="mil_circle";
-			colorName="ColorBlack";
 		};
 	};
 	class Sensors
