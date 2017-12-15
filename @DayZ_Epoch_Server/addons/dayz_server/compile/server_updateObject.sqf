@@ -78,10 +78,10 @@ _object_position =
 	#endif
 };
 
+// ZSC
 _object_inventory =
 {
-	private ["_inventory","_key","_isNormal","_coins","_forceUpdate"];
-	_forceUpdate = false;
+	private ["_inventory","_key","_isNormal","_coins"];
 	
 	if (_object isKindOf "TrapItems") then
 	{
@@ -103,11 +103,6 @@ _object_inventory =
 			_inventory 	= 	_object getVariable ["doorfriends", []];
 		};
 		
-		if (Z_SingleCurrency && {typeOf (_object) in DZE_MoneyStorageClasses}) then
-		{
-			_forceUpdate = true;
-		};
-		
 		if (_isNormal) then
 		{
 			_inventory = [getWeaponCargo _object, getMagazineCargo _object, getBackpackCargo _object];
@@ -115,7 +110,7 @@ _object_inventory =
 	};
 	
 	_previous = str(_object getVariable["lastInventory",[]]);
-	if ((str _inventory != _previous) || {_forceUpdate}) then
+	if (str _inventory != _previous) then
 	{
 		_object setVariable["lastInventory",_inventory];
 		
@@ -344,5 +339,9 @@ switch (_type) do {
 	};
 	case "objWallDamage": {
 		call _objWallDamage;
+	};
+	case "coins": {
+		_object setVariable ["lastInventory",["forceUpdate"]];
+		call _object_inventory;
 	};
 };

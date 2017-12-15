@@ -1,4 +1,4 @@
-private ["_backpacks","_charID","_clientID","_dir","_holder","_lockCode","_lockColor","_lockedClass","_magazines","_name","_obj","_objectID","_objectUID","_ownerID","_packedClass","_player","_playerUID","_pos","_status","_statusText","_type","_unlockedClass","_vector","_weapons","_message","_suppliedCode","_fnc_lockCode"];
+private ["_backpacks","_charID","_clientID","_dir","_holder","_lockCode","_lockColor","_lockedClass","_magazines","_name","_obj","_objectID","_objectUID","_ownerID","_packedClass","_player","_playerUID","_pos","_status","_statusText","_type","_unlockedClass","_vector","_weapons","_message","_suppliedCode","_fnc_lockCode","_coins","_wealth"];
 
 _player 	= 	_this select 0;
 _obj 		= 	_this select 1;
@@ -74,6 +74,11 @@ switch (_status) do
 		_magazines 		= 	_obj getVariable ["MagazineCargo",[]];
 		_backpacks 		= 	_obj getVariable ["BackpackCargo",[]];
 		
+		if (Z_singleCurrency) then
+		{
+			_coins = _obj getVariable [Z_MoneyVariable,0];
+		};
+
 		// Создаем новый Открытый сейф, при этом удаляем старый Закрытый
 		//_holder = createVehicle [_unlockedClass,_pos,[],0,"CAN_COLLIDE"];
 		_holder = _unlockedClass createVehicle [0,0,0];
@@ -91,6 +96,11 @@ switch (_status) do
 			_holder setVariable ["ownerPUID",_ownerID,true];
 		};
 		
+		if (Z_singleCurrency) then
+		{
+			_holder setVariable [Z_MoneyVariable,_coins,true];
+		};
+
 		deleteVehicle _obj;
 		
 		[_weapons,_magazines,_backpacks,_holder] call server_addCargo;
@@ -107,6 +117,11 @@ switch (_status) do
 		_magazines = getMagazineCargo _obj;
 		_backpacks = getBackpackCargo _obj;
 		
+		if (Z_singleCurrency) then
+		{
+			_coins = _obj getVariable [Z_MoneyVariable,0];
+		};
+
 		// Создаем новый Закрытый сейф, при этом удаляем старый Открытый
 		//_holder = createVehicle [_lockedClass,_pos,[],0,"CAN_COLLIDE"];
 		_holder = _lockedClass createVehicle [0,0,0];
@@ -122,7 +137,12 @@ switch (_status) do
 		if (DZE_permanentPlot) then
 		{
 			_holder setVariable ["ownerPUID",_ownerID,true];
-		};		
+		};
+		
+		if (Z_singleCurrency) then
+		{
+			_holder setVariable [Z_MoneyVariable,_coins,true];
+		};
 		
 		deleteVehicle _obj;
 		
@@ -141,6 +161,11 @@ switch (_status) do
 		_magazines = getMagazineCargo _obj;
 		_backpacks = getBackpackCargo _obj;
 		
+		if (Z_singleCurrency) then
+		{
+			_coins = _obj getVariable [Z_MoneyVariable,0];
+		};
+
 		//_holder = createVehicle [_packedClass,_pos,[],0,"CAN_COLLIDE"];
 		_holder = _packedClass createVehicle [0,0,0];
 		
@@ -151,6 +176,16 @@ switch (_status) do
 		_holder addMagazineCargoGlobal [getText(configFile >> "CfgVehicles" >> _packedClass >> "seedItem"),1];
 		
 		[_weapons,_magazines,_backpacks,_holder] call server_addCargo;
+		
+		if (Z_singleCurrency && {_coins > 0}) then
+		{
+			_wealth = _player getVariable [Z_MoneyVariable,0];
+			_player setVariable [Z_MoneyVariable,_wealth + _coins,true];
+			
+			// Нахрена через remoteMessage?! Обычного Hint мало или того же RollingMessage?
+			RemoteMessage = ["private",[_playerUID,format ["You packed %1 while it had %2 %3 in it, it has been transferred to your %3 total.",_type,[_coins] call BIS_fnc_numberText,CurrencyName]]];
+			publicVariable "RemoteMessage";
+		};
 		
 		// Удаляем сейф из Базы Данных
 		[_objectID,_objectUID,_player] call server_deleteObj;

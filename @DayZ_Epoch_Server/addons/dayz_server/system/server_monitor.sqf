@@ -283,7 +283,7 @@ if ((playersNumber west + playersNumber civilian) == 0) exitWith
 		_object setVariable ["ObjectID", _idKey, true];
 		_object setVariable ["OwnerPUID", _ownerPUID, true];
 		
-		if (Z_SingleCurrency && {_type in DZE_MoneyStorageClasses}) then
+		if (Z_SingleCurrency && {(_type in DZE_MoneyStorageClasses) || (_object isKindOf "AllVehicles")}) then
 		{
 			_object setVariable [Z_MoneyVariable, _storageMoney, true];
 		};

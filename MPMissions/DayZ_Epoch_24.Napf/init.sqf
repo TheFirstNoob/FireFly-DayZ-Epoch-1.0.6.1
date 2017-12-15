@@ -50,13 +50,13 @@ if (!isDedicated) then
 };
 
 initialized = false;
-call compile preprocessFileLineNumbers "\z\addons\dayz_code\init\variables.sqf";
+call compile preprocessFileLineNumbers "Fixes\dayz_code\init\variables.sqf";		// Custom
 progressLoadingScreen 0.05;
 call compile preprocessFileLineNumbers "\z\addons\dayz_code\init\publicEH.sqf";
 progressLoadingScreen 0.1;
 call compile preprocessFileLineNumbers "\z\addons\dayz_code\medical\setup_functions_med.sqf";
 progressLoadingScreen 0.15;
-call compile preprocessFileLineNumbers "\z\addons\dayz_code\init\compiles.sqf";
+call compile preprocessFileLineNumbers "Fixes\dayz_code\init\compiles.sqf";			// Custom
 
 if (_verCheck) then
 {
@@ -104,6 +104,11 @@ if (!isDedicated) then
 	};
 	
 	waitUntil {scriptDone progress_monitor};
+	
+	call compile preprocessFileLineNumbers "Scripts\ZSC\ZSCInit.sqf";
+	execVM "scripts\zsc\playerHud.sqf";
+	[] execVM "dayz_code\compile\remote_message.sqf";
+	
 	cutText ["","BLACK IN", 3];
 	3 fadeSound 1;
 	3 fadeMusic 1;

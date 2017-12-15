@@ -207,10 +207,13 @@ Z_VehicleDistance 				= 	30; 		// Дистанция продажи техник
 Z_AllowTakingMoneyFromBackpack 	= 	true; 		// Брать деньги из Рюкзака
 Z_AllowTakingMoneyFromVehicle 	= 	true; 		// Брать деньги из Техники
 
-Z_SingleCurrency 			= 	false; 			// Используется ли ZSC?
-CurrencyName 				= 	"Coins"; 		// Название валюты в ZSC
-Z_MoneyVariable 			= 	"cashMoney"; 	// Переменная валюты в ZSC
-DZE_MoneyStorageClasses 	= 	[]; 			// Если используется ZSC, то где можно хранить деньги
+Z_SingleCurrency 			= 	true; 						// Используется ли ZSC?
+CurrencyName 				= 	"Рублей"; 					// Название валюты в ZSC
+Z_MoneyVariable 			= 	"Rubles";					// Переменная валюты в ZSC
+
+ZSC_defaultStorageMultiplier		=	200; 				// Сколько мест будет в тех предметах, которые изначально не имеют слотов для подсчета (Например: Suitcase, Info_Board_EP1, Plastic_Pole_EP1_DZ)
+ZSC_MaxMoneyInStorageMultiplier		=	500; 				// Множитель денег под слоты техники/построек (Например: 200*50000=10м рублей)
+
 
 timezoneswitch = 0; 				// Не трогать лучше.
 DZE_DisabledChannels = [(localize "str_channel_side"),(localize "str_channel_global"),(localize "str_channel_command")]; // Список отключенных каналов: "str_channel_group","str_channel_direct","str_channel_vehicle"

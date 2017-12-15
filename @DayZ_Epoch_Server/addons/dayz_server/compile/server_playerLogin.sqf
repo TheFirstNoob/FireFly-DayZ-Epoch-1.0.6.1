@@ -193,6 +193,10 @@ _isHiveOk = (_hiveVer >= dayz_hiveVersionNo);
 	};
 */
 
+if (_newPlayer) then
+{
+	_characterCoins = (random 1000);		// Даем случайное количество денег новому игроку
+};
 PVCDZ_plr_Login = [_charID,_inventory,_backpack,_survival,_isNew,dayz_versionNo,_model,_isHiveOk,_newPlayer,_isInfected,_group,_CharacterCoins,_playerCoins,_BankCoins];
 (owner _playerObj) publicVariableClient "PVCDZ_plr_Login";
 
