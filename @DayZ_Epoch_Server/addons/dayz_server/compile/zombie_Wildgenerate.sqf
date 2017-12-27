@@ -30,11 +30,11 @@ while {_counter < _amount} do {
 	{
 		_agent setUnitPos "Middle";
 	};
-	// Радиус бесдействия (слоняться)
+	// Радиус бездействия (слоняться)
 	_position = getPosATL _agent;
 	_agent setVariable ["homePos",_position,true];
 	// Храним _agentobject
-	_agent setVariable["agentObject",_agent,true];
+	_agent setVariable ["agentObject",_agent,true];
 	
 	// Добавим в значение
 	_counter = _counter + 1;
